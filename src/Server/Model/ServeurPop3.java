@@ -21,7 +21,7 @@ public class ServeurPop3 implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Dans le run de sHTTP");
+        System.out.println("Dans le run de POP3");
         /**
          * Creation du flux in et out
          */
@@ -38,7 +38,7 @@ public class ServeurPop3 implements Runnable {
     }
 
     public void recevoir(DataInputStream infromClient, DataOutputStream outToClient) {
-        System.out.println("Dans recevoir de serveur http");
+        System.out.println("Dans recevoir de serveur pop3");
         String[] input = {};
         String headerRequete = "";
 
