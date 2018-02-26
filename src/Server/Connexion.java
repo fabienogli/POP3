@@ -6,11 +6,15 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class Connexion implements Runnable{
+public class Connexion implements Runnable {
+
     private InetAddress clientAdress;
     private int portEcoute;
     private Socket clientSocket;
     private int clientPort = 0;
+    private state currentstate = state.ATTENTE_CONNEXION;
+
+    private enum state {ATTENTE_CONNEXION, AUTHORIZATION, AUTHENTIFICATION, TRANSACTION};
 
 
     public Connexion(InetAddress clientAdress, Socket clientSocket, int clientPort) {
@@ -19,21 +23,53 @@ public class Connexion implements Runnable{
         this.clientPort = clientPort;
     }
 
-
     @Override
     public void run() {
-        System.out.println("Dans le run de sHTTP");
-        /**
-         * Creation du flux in et out
-         */
-        DataInputStream inFromClient;
-        DataOutputStream outToClient;
-        //Dans le run de serveur
-        try {
-            inFromClient = new DataInputStream(clientSocket.getInputStream());
-            outToClient = new DataOutputStream(clientSocket.getOutputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
+        switch (currentstate) {
+            case ATTENTE_CONNEXION:
+                break;
+            case AUTHENTIFICATION:
+                break;
+            case AUTHORIZATION:
+                break;
+            case TRANSACTION:
+                break;
+            default:
+                break;
+
+
         }
+    }
+
+    private void quit() {
+
+    }
+
+    private void user() {
+
+    }
+
+    private void pass() {
+
+    }
+
+    private void apop() {
+
+    }
+
+    private void list() {
+
+    }
+
+    private void stat() {
+
+    }
+
+    private void delete() {
+
+    }
+
+    private void retrieve() {
+
     }
 }
