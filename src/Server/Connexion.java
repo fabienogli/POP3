@@ -46,6 +46,7 @@ public class Connexion implements Runnable {
 
         String requete = "";
         String result ="";
+        String codeRetour
         try {
             requete = infromClient.readLine();
         } catch (IOException e) {
@@ -54,9 +55,11 @@ public class Connexion implements Runnable {
         switch (currentstate) {
             case ATTENTE_CONNEXION:
                 result=States.attenteConnexion();
+
                 break;
             case AUTHENTIFICATION:
                 result=States.authentification(requete);
+
                 break;
             case AUTHORIZATION:
                 result=States.authorization(requete);
@@ -69,6 +72,13 @@ public class Connexion implements Runnable {
                 break;
         }
 
+        try {
+            outToClient.writeBytes(result);
+            outToClient.flush();
+            outToClient.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
