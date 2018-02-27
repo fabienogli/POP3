@@ -41,5 +41,9 @@ public class Commande {
 
         return null;
     }
+    public static String ready(){
+        //envoi message ready
+        return "Serveur POP3 Ready";
+    }
 
 }

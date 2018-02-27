@@ -1,9 +1,8 @@
 package Server;
-import  Server.Commande;
 
 public class States {
 
-    public static void authorization(String requete){
+    public static String authorization(String requete){
         String[] arg = requete.split(" ");
         String returnCode = "";
 
@@ -22,10 +21,11 @@ public class States {
                 returnCode= "-ERR";
                 break;
         }
-        
 
+
+        return returnCode;
     }
-    public static void transaction(String requete){
+    public static String transaction(String requete){
         String[] arg = requete.split(" ");
         String returnCode = "";
 
@@ -42,8 +42,9 @@ public class States {
                 break;
         }
 
+        return returnCode;
     }
-    public static void authentification(String requete){
+    public static String authentification(String requete){
         String[] arg = requete.split(" ");
         String returnCode = "";
 
@@ -53,5 +54,9 @@ public class States {
                     returnCode= "-ERR";
                     break;
         }
+        return returnCode;
+    }
+    public static String attenteConnexion(){
+        return Commande.ready();
     }
 }

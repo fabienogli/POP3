@@ -44,7 +44,8 @@ public class Connexion implements Runnable {
 
     private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient){
 
-        String requete = null;
+        String requete = "";
+        String result ="";
         try {
             requete = infromClient.readLine();
         } catch (IOException e) {
@@ -52,18 +53,19 @@ public class Connexion implements Runnable {
         }
         switch (currentstate) {
             case ATTENTE_CONNEXION:
-
+                result=States.attenteConnexion();
                 break;
             case AUTHENTIFICATION:
-                States.authentification(requete);
+                result=States.authentification(requete);
                 break;
             case AUTHORIZATION:
-                States.authorization(requete);
+                result=States.authorization(requete);
                 break;
             case TRANSACTION:
-                States.transaction(requete);
+                result=States.transaction(requete);
                 break;
             default:
+                result="-ERR";
                 break;
         }
 
