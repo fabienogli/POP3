@@ -46,7 +46,7 @@ public class Connexion implements Runnable {
 
         String requete = "";
         String result ="";
-        String codeRetour
+        String codeRetour[]= null;
         try {
             requete = infromClient.readLine();
         } catch (IOException e) {
@@ -59,6 +59,10 @@ public class Connexion implements Runnable {
                 break;
             case AUTHENTIFICATION:
                 result=States.authentification(requete);
+                codeRetour=result.split(" ");
+                if (codeRetour[0].equalsIgnoreCase("+OK")){
+                    this.currentstate=state.TRANSACTION;
+                }
 
                 break;
             case AUTHORIZATION:
