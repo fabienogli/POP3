@@ -28,16 +28,17 @@ public class Commande {
     }
 
     public static String stat() {
+/*" +OK " suivi par un simple espace, le nombre de message dans le dépôt de courrier,
+ un simple espace et la taille du dépôt de courrier en octets*/
+        return null;
+    }
+
+    public static String delete(int numMessage) {
 
         return null;
     }
 
-    public static String delete() {
-
-        return null;
-    }
-
-    public static String retrieve() {
+    public static String retrieve(int numMessage) {
 
         return null;
     }

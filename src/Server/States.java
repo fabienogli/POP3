@@ -32,10 +32,18 @@ public class States {
         switch (arg[0]) {
             //commandes prises en charge par cet etat
             case "LIST":
+                Commande.list();
+                break;
             case "STAT":
+                Commande.stat();
+                break;
             case "RETR":
+                Commande.retrieve(Integer.parseInt(arg[1]));
+                break;
             case "DELE":
+                Commande.delete(Integer.parseInt(arg[1]));
             case "NOOP":
+                break;
             //commandes non prises en charge cet etat
             default:
                 returnCode= "-ERR";
