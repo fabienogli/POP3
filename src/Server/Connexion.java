@@ -3,6 +3,8 @@ package Server;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import Server.States;
+
 
 public class Connexion implements Runnable {
 
@@ -27,7 +29,8 @@ public class Connexion implements Runnable {
     @Override
     public void run() {
         switch (currentstate) {
-            /*case ATTENTE_CONNEXION:
+            case ATTENTE_CONNEXION:
+
                 break;
             case AUTHENTIFICATION:
                 break;
@@ -36,19 +39,15 @@ public class Connexion implements Runnable {
             case TRANSACTION:
                 break;
             default:
-                break;*/
+                break;
 
 
         }
     }
 
 
-    private void authorization(String requete){
 
-    }
-    private void transaction(String requete){
 
-    }
 
     public boolean isApopValid() {
         return false;

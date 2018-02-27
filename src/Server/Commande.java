@@ -2,35 +2,35 @@ package Server;
 
 public class Commande {
 
-    private void quit() {
+    public static void quit() {
 
     }
 
-    private void user() {
+    public static void user() {
 
     }
 
-    private void pass() {
+    public static void pass() {
 
     }
 
-    private void apop() {
+    public static void apop() {
 
     }
 
-    private void list() {
+    public static void list() {
 
     }
 
-    private void stat() {
+    public static void stat() {
 
     }
 
-    private void delete() {
+    public static void delete() {
 
     }
 
-    private void retrieve() {
+    public static void retrieve() {
 
     }
 
