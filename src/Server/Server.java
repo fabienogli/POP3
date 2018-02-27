@@ -41,6 +41,7 @@ public class Server {
     }
 
     public static void main(String[] args) {
+        System.out.println("dans le main");
         Server server = new Server();
         server.lancer();
     }

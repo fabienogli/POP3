@@ -2,30 +2,33 @@ package Server;
 
 public class States {
 
-    public static String authorization(String requete){
+    public static String authorization(String requete, Connexion connexion) {
         String[] arg = requete.split(" ");
         String returnCode = "";
 
-        switch(arg[0]){
+        switch (arg[0]) {
             //commandes prises en charge par cet etat
             case "APOP":
-                returnCode=Commande.apop();
-                 break;
+                returnCode = Commande.apop();
+                break;
             case "USER":
-                returnCode=Commande.user();
+                if (arg.length == 2) {
+                    returnCode = Commande.user(arg[1], connexion);
+                }
                 break;
             case "QUIT":
-                returnCode=Commande.quit();
-           //commandes non prises en charge cet etat
+                returnCode = Commande.quit();
+                //commandes non prises en charge cet etat
             default:
-                returnCode= "-ERR";
+                returnCode = "-ERR";
                 break;
         }
 
 
         return returnCode;
     }
-    public static String transaction(String requete){
+
+    public static String transaction(String requete, Connexion connexion) {
         String[] arg = requete.split(" ");
         String returnCode = "";
 
@@ -46,25 +49,31 @@ public class States {
                 break;
             //commandes non prises en charge cet etat
             default:
-                returnCode= "-ERR";
+                returnCode = "-ERR";
                 break;
         }
 
         return returnCode;
     }
-    public static String authentification(String requete){
+
+    public static String authentification(String requete, Connexion connexion) {
         String[] arg = requete.split(" ");
         String returnCode = "";
 
         switch (arg[0]) {
             case "PASS":
-                default:
-                    returnCode= "-ERR";
-                    break;
+                if (arg.length == 2) {
+                    Commande.pass(arg[1], connexion);
+                } else returnCode = "-ERR";
+            default:
+                returnCode = "-ERR";
+                break;
         }
         return returnCode;
     }
-    public static String attenteConnexion(){
+
+    public static String attenteConnexion(Connexion connexion) {
+        connexion.setCurrentstate(StateEnum.AUTHORIZATION);
         return Commande.ready();
     }
 }

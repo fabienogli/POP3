@@ -7,22 +7,30 @@ public class Commande {
         return null;
     }
 
-    public static String user() {
+    public static String user(String user, Connexion connexion) {
+        String result = "-ERR";
+        //verifier si la boite au lettres existe
 
-        return null;
+        //si oui
+        connexion.setUSER(user);
+        return result;
     }
 
-    public static String pass() {
+    public static String pass(String password, Connexion connexion) {
+        String result = "-ERR";
+        //verifier le mot de passe pour l'identifiant donné
 
-        return null;
+        return result;
     }
 
     public static String apop() {
+        String result = "-ERR";
 
-        return null;
+        return result;
     }
 
     public static String list() {
+        String result = "-ERR";
 
         return null;
     }
@@ -45,6 +53,21 @@ public class Commande {
     public static String ready(){
         //envoi message ready
         return "Serveur POP3 Ready";
+    }
+
+    public boolean isApopValid() {
+        return false;
+    }
+
+    public boolean isUserValid(String USER) {
+        return false;
+    }
+
+    public boolean isPassValid(String PASS,String USER) {
+        if (USER == null) {
+            return false;
+        }
+        return false;
     }
 
 }

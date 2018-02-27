@@ -3,7 +3,6 @@ package Server;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import Server.States;
 
 
 public class Connexion implements Runnable {
@@ -12,12 +11,19 @@ public class Connexion implements Runnable {
     private int portEcoute;
     private Socket clientSocket;
     private int clientPort = 0;
-    private state currentstate = state.ATTENTE_CONNEXION;
+    private StateEnum currentstate = StateEnum.ATTENTE_CONNEXION;
     private String USER;
     private final int i_USER = 0;
     private final int i_PASS = 1;
 
-    private enum state {ATTENTE_CONNEXION, AUTHORIZATION, AUTHENTIFICATION, TRANSACTION}
+    public StateEnum getCurrentstate() {
+        return this.currentstate;
+    }
+
+    public void setCurrentstate(StateEnum currentstate) {
+        this.currentstate = currentstate;
+    }
+
 
 
     public Connexion(InetAddress clientAdress, Socket clientSocket, int clientPort) {
@@ -28,17 +34,31 @@ public class Connexion implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("Dans le run");
         DataInputStream inFromClient;
-        DataOutputStream outToClient;
+        DataOutputStream outToClient ;
         //Dans le run de serveur
-        try {
-            inFromClient = new DataInputStream(clientSocket.getInputStream());
-            outToClient = new DataOutputStream(clientSocket.getOutputStream());
-            this.traiterCommande(inFromClient, outToClient);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)){
+            String result = States.attenteConnexion(this);
+            try {
+                outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                outToClient.writeBytes(result);
+                outToClient.flush();
+               // outToClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println( this.currentstate);
         }
-
+        else {
+            try {
+                inFromClient = new DataInputStream(clientSocket.getInputStream());
+                outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                this.traiterCommande(inFromClient, outToClient);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
     }
 
@@ -52,29 +72,21 @@ public class Connexion implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        switch (currentstate) {
-            case ATTENTE_CONNEXION:
-                result=States.attenteConnexion();
-
-                break;
+        switch (getCurrentstate()) {
             case AUTHENTIFICATION:
-                result=States.authentification(requete);
-                codeRetour=result.split(" ");
-                if (codeRetour[0].equalsIgnoreCase("+OK")){
-                    this.currentstate=state.TRANSACTION;
-                }
-
+                result=States.authentification(requete,this);
                 break;
             case AUTHORIZATION:
-                result=States.authorization(requete);
+                result=States.authorization(requete,this);
                 break;
             case TRANSACTION:
-                result=States.transaction(requete);
+                result=States.transaction(requete,this);
                 break;
             default:
                 result="-ERR";
                 break;
         }
+        System.out.println( this.currentstate);
 
         try {
             outToClient.writeBytes(result);
@@ -83,25 +95,11 @@ public class Connexion implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 
 
-    public boolean isApopValid() {
-        return false;
-    }
 
-    public boolean isUserValid(String USER) {
-        return false;
-    }
-
-    public boolean isPassValid(String PASS) {
-        if (this.USER == null) {
-            return false;
-        }
-        return false;
-    }
 
     public String getDataFromDb(int i_data) {
         String toReturn = "";
@@ -141,5 +139,13 @@ public class Connexion implements Runnable {
             e.printStackTrace();
         }
         return toReturn;
+    }
+
+    public String getUSER() {
+        return USER;
+    }
+
+    public void setUSER(String USER) {
+        this.USER = USER;
     }
 }

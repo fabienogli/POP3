@@ -1,0 +1,4 @@
+package Server;
+
+public  enum StateEnum {ATTENTE_CONNEXION, AUTHORIZATION, AUTHENTIFICATION, TRANSACTION}
+
