@@ -26,7 +26,7 @@ public class Connexion implements Runnable {
     @Override
     public void run() {
         switch (currentstate) {
-            case ATTENTE_CONNEXION:
+            /*case ATTENTE_CONNEXION:
                 break;
             case AUTHENTIFICATION:
                 break;
@@ -35,41 +35,17 @@ public class Connexion implements Runnable {
             case TRANSACTION:
                 break;
             default:
-                break;
+                break;*/
 
 
         }
     }
 
-    private void quit() {
+
+    private void authorization(String requete){
 
     }
-
-    private void user() {
-
-    }
-
-    private void pass() {
-
-    }
-
-    private void apop() {
-
-    }
-
-    private void list() {
-
-    }
-
-    private void stat() {
-
-    }
-
-    private void delete() {
-
-    }
-
-    private void retrieve() {
+    private void transaction(String requete){
 
     }
 }
