@@ -28,24 +28,47 @@ public class Connexion implements Runnable {
 
     @Override
     public void run() {
+        DataInputStream inFromClient;
+        DataOutputStream outToClient;
+        //Dans le run de serveur
+        try {
+            inFromClient = new DataInputStream(clientSocket.getInputStream());
+            outToClient = new DataOutputStream(clientSocket.getOutputStream());
+            this.traiterCommande(inFromClient, outToClient);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient){
+
+        String requete = null;
+        try {
+            requete = infromClient.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         switch (currentstate) {
             case ATTENTE_CONNEXION:
 
                 break;
             case AUTHENTIFICATION:
+                States.authentification(requete);
                 break;
             case AUTHORIZATION:
+                States.authorization(requete);
                 break;
             case TRANSACTION:
+                States.transaction(requete);
                 break;
             default:
                 break;
-
-
         }
+
+
     }
-
-
 
 
 

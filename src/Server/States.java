@@ -3,25 +3,31 @@ import  Server.Commande;
 
 public class States {
 
-    private void authorization(String requete){
+    public static void authorization(String requete){
         String[] arg = requete.split(" ");
+        String returnCode = "";
 
         switch(arg[0]){
             //commandes prises en charge par cet etat
             case "APOP":
+                returnCode=Commande.apop();
                  break;
             case "USER":
+                returnCode=Commande.user();
                 break;
             case "QUIT":
+                returnCode=Commande.quit();
            //commandes non prises en charge cet etat
-            default:break;
-
-
+            default:
+                returnCode= "-ERR";
+                break;
         }
+        
 
     }
-    private void transaction(String requete){
+    public static void transaction(String requete){
         String[] arg = requete.split(" ");
+        String returnCode = "";
 
         switch (arg[0]) {
             //commandes prises en charge par cet etat
@@ -31,16 +37,21 @@ public class States {
             case "DELE":
             case "NOOP":
             //commandes non prises en charge cet etat
-            default:break;
+            default:
+                returnCode= "-ERR";
+                break;
         }
 
     }
-    private void authentification(String requete){
+    public static void authentification(String requete){
         String[] arg = requete.split(" ");
+        String returnCode = "";
 
         switch (arg[0]) {
             case "PASS":
-                default:break;;
+                default:
+                    returnCode= "-ERR";
+                    break;
         }
     }
 }
