@@ -4,8 +4,9 @@ import java.io.*;
 
 public class Commande {
 
-    private final int i_USER = 0;
-    private final int i_PASS = 1;
+    public static final int i_USER = 0;
+    public static final int i_PASS = 1;
+    public static final int i_ADRESSE = 2;
     public static String quit() {
 
         return null;
@@ -73,12 +74,10 @@ public class Commande {
         }
         return false;
     }
-    public String getDataFromDb(int i_data) {
+    public static String getDataFromDb(int i_data) {
         String toReturn = "";
         try {
-            String chemin = "./storage.csv";
-            File file = new File(chemin);
-            FileReader fileReader = new FileReader("./storage.csv");
+            FileReader fileReader = new FileReader("src/database/storage.csv");
             BufferedReader db = new BufferedReader(fileReader);
             String chaine;
             int i = 1;
@@ -95,7 +94,7 @@ public class Commande {
                         } else if (x == i_PASS) {
                             System.out.println("pass = " + tabChaine[x]+"\n");
                         } else {
-                            System.out.println("message = " + tabChaine[x]+"\n");
+                            System.out.println("email = " + tabChaine[x]+"\n");
                         }
                     }
                 }
