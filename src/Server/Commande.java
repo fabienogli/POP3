@@ -66,7 +66,7 @@ public class Commande {
     }
 
     public static String encryptApop(String toEncrypt) {
-        StringBuffer encryptMd5 = new StringBuffer();
+        StringBuilder encryptMd5 = new StringBuilder();
         try {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] encrApop = md5.digest(toEncrypt.getBytes());
