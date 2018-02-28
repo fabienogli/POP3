@@ -75,13 +75,21 @@ public class testCommande{
     }
 
     private static void testApop() {
+        System.out.println("Doit être vrai\n");
+        System.out.println(Commande.isApopValid(Commande.encryptApop("strength"), "foo"));
+        System.out.println(Commande.isApopValid(Commande.encryptApop("will"), "root"));
+        System.out.println(Commande.isApopValid(Commande.encryptApop("begood"), "john"));
+        System.out.println("Doit être faux\n");
+        System.out.println(Commande.isApopValid(Commande.encryptApop("will"), "foo"));
+        System.out.println(Commande.isApopValid(Commande.encryptApop("begood"), "root"));
+        System.out.println(Commande.isApopValid(Commande.encryptApop("strength"), "john"));
 
     }
 
     public static void main(String[] args) {
-//        testPass();
-//        testUser();
-//        testEncyptApop();
+        testPass();
+        testUser();
+        testEncyptApop();
         testApop();
     }
 }
