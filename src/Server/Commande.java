@@ -1,6 +1,10 @@
 package Server;
 
 import java.io.*;
+import java.math.BigInteger;
+import java.net.HttpRetryException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Commande {
 
@@ -61,7 +65,52 @@ public class Commande {
         return "Serveur POP3 Ready";
     }
 
-    public static boolean isApopValid() {
+    public static String encryptApop(String toEncrypt) {
+        StringBuffer encryptMd5 = new StringBuffer();
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            byte[] encrApop = md5.digest(toEncrypt.getBytes());
+            for (int i = 0; i < encrApop.length; ++i) {
+                encryptMd5.append(Integer.toHexString((encrApop[i] & 0xFF) | 0x100).substring(1,3));
+            }
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return encryptMd5.toString();
+    }
+
+    public static boolean isApopValid(String APOP, String USER) {
+        if (USER == null || APOP == null) {
+            return false;
+        }
+        try {
+            FileReader fileReader = new FileReader(cheminDatabase + "users.csv");
+            BufferedReader db = new BufferedReader(fileReader);
+            String chaine;
+            int i = 1;
+            while((chaine = db.readLine())!= null)
+            {
+                if(i > 1)
+                {
+                    String[] tabChaine = chaine.split(",");
+                    for (int x = 0; x < tabChaine.length; x++) {
+                        if (x == i_USER && USER.equals(tabChaine[x]) && encryptApop(tabChaine[x + 2]).equals(APOP)) {
+                            return true;
+                        } else if (x == i_USER && USER.equals(tabChaine[x])) { //Le user est bien là mais le mot de passe ne correspond pas
+                            return false;
+                        }
+                    }
+                }
+                i++;
+            }
+            db.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println("Le fichier est introuvable !");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

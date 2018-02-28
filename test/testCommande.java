@@ -45,27 +45,43 @@ public class testCommande{
         return toReturn;
     }
 
-    public static void main(String[] args) {
+    private static void testUser() {
         System.out.println("Doit être vrai\n");
         System.out.println(Commande.isUserValid("john"));
         System.out.println(Commande.isUserValid("root"));
         System.out.println(Commande.isUserValid("foo"));
-        System.out.println(Commande.isPassValid("doe","john"));
-        System.out.println(Commande.isPassValid("toor","root"));
-        System.out.println(Commande.isPassValid("bar","foo"));
-
-
         System.out.println("\nDoit être faux\n");
         System.out.println(Commande.isUserValid("jon"));
         System.out.println(Commande.isUserValid("rot"));
         System.out.println(Commande.isUserValid("unknown"));
         System.out.println(Commande.isUserValid(""));
+    }
+
+    private static void testPass() {
+        System.out.println("Doit être vrai\n");
+        System.out.println(Commande.isPassValid("doe","john"));
+        System.out.println(Commande.isPassValid("toor","root"));
+        System.out.println(Commande.isPassValid("bar","foo"));
+        System.out.println("\nDoit être faux\n");
         System.out.println(Commande.isPassValid("toor","john"));
         System.out.println(Commande.isPassValid("bar","root"));
         System.out.println(Commande.isPassValid("doe","foo"));
         System.out.println(Commande.isPassValid("","foo"));
+    }
 
+    private static void testEncyptApop() {
+        System.out.println("Doit être vrai\n");
+        System.out.println("c4c9334bac560ecc979e58001b3e22fb".equals(Commande.encryptApop("<1896.697170952@dbc.mtview.ca.us>tanstaaf")));
+    }
 
+    private static void testApop() {
 
+    }
+
+    public static void main(String[] args) {
+//        testPass();
+//        testUser();
+//        testEncyptApop();
+        testApop();
     }
 }
