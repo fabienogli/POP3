@@ -4,9 +4,10 @@ import java.io.*;
 
 public class Commande {
 
-    public static final int i_USER = 0;
-    public static final int i_PASS = 1;
-    public static final int i_ADRESSE = 2;
+    protected static final int i_USER = 0;
+    protected static final int i_PASS = 1;
+    protected static final int i_ADRESSE = 2;
+    private static String cheminDatabase = "src/database/";
     public static String quit() {
 
         return null;
@@ -60,24 +61,17 @@ public class Commande {
         return "Serveur POP3 Ready";
     }
 
-    public boolean isApopValid() {
+    public static boolean isApopValid() {
         return false;
     }
 
-    public boolean isUserValid(String USER) {
-        return false;
-    }
-
-    public boolean isPassValid(String PASS,String USER) {
+    public static boolean isUserValid(String USER) {
         if (USER == null) {
             return false;
         }
-        return false;
-    }
-    public static String getDataFromDb(int i_data) {
-        String toReturn = "";
+
         try {
-            FileReader fileReader = new FileReader("src/database/storage.csv");
+            FileReader fileReader = new FileReader(cheminDatabase + "users.csv");
             BufferedReader db = new BufferedReader(fileReader);
             String chaine;
             int i = 1;
@@ -86,22 +80,15 @@ public class Commande {
                 if(i > 1)
                 {
                     String[] tabChaine = chaine.split(",");
-                    //Tu effectues tes traitements avec les données contenues dans le tableau
-                    //La première information se trouve à l'indice 0
                     for (int x = 0; x < tabChaine.length; x++) {
-                        if (x == i_USER) {
-                            System.out.println("user = " + tabChaine[x]+"\n");
-                        } else if (x == i_PASS) {
-                            System.out.println("pass = " + tabChaine[x]+"\n");
-                        } else {
-                            System.out.println("email = " + tabChaine[x]+"\n");
+                        if (x == i_USER && USER.equals(tabChaine[x])) {
+                            return true;
                         }
                     }
                 }
                 i++;
             }
             db.close();
-
         }
         catch (FileNotFoundException e)
         {
@@ -109,7 +96,42 @@ public class Commande {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return toReturn;
+        return false;
+    }
+
+    public static boolean isPassValid(String PASS,String USER) {
+        if (USER == null || PASS == null) {
+            return false;
+        }
+        try {
+            FileReader fileReader = new FileReader(cheminDatabase + "users.csv");
+            BufferedReader db = new BufferedReader(fileReader);
+            String chaine;
+            int i = 1;
+            while((chaine = db.readLine())!= null)
+            {
+                if(i > 1)
+                {
+                    String[] tabChaine = chaine.split(",");
+                    for (int x = 0; x < tabChaine.length; x++) {
+                        if (x == i_USER && USER.equals(tabChaine[x]) && tabChaine[x + 1].equals(PASS)) {
+                            return true;
+                        } else if (x == i_USER && USER.equals(tabChaine[x])) { //Le user est bien là mais le mot de passe ne correspond pas
+                            return false;
+                        }
+                    }
+                }
+                i++;
+            }
+            db.close();
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println("Le fichier est introuvable !");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }
