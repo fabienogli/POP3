@@ -26,7 +26,6 @@ public class Connexion implements Runnable {
     }
 
 
-
     public Connexion(InetAddress clientAdress, Socket clientSocket, int clientPort) {
         this.clientAdress = clientAdress;
         this.clientSocket = clientSocket;
@@ -37,37 +36,40 @@ public class Connexion implements Runnable {
     public void run() {
         System.out.println("Dans le run");
         DataInputStream inFromClient;
-        DataOutputStream outToClient ;
+        DataOutputStream outToClient;
         //Dans le run de serveur
-        if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)){
-            String result = States.attenteConnexion(this);
-            try {
-                outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                outToClient.writeBytes(result);
-                outToClient.flush();
-               // outToClient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            System.out.println( this.currentstate);
-        }
-        else {
-            try {
-                inFromClient = new DataInputStream(clientSocket.getInputStream());
-                outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                this.traiterCommande(inFromClient, outToClient);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        System.out.println(this.currentstate);
+        while (true) {
+            if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)) {
+                String result = States.attenteConnexion(this);
+                try {
+                    outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                    outToClient.writeBytes(result);
+                    outToClient.flush();
+                    // outToClient.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(this.currentstate);
+            } else {
 
+                try {
+                    inFromClient = new DataInputStream(clientSocket.getInputStream());
+                    outToClient = new DataOutputStream(clientSocket.getOutputStream());
+                    this.traiterCommande(inFromClient, outToClient);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
     }
 
-    private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient){
+    private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient) {
 
         String requete = "";
-        String result ="";
-        String codeRetour[]= null;
+        String result = "";
+        String codeRetour[] = null;
         try {
             requete = infromClient.readLine();
         } catch (IOException e) {
@@ -75,33 +77,28 @@ public class Connexion implements Runnable {
         }
         switch (getCurrentstate()) {
             case AUTHENTIFICATION:
-                result=States.authentification(requete,this);
+                result = States.authentification(requete, this);
                 break;
             case AUTHORIZATION:
-                result=States.authorization(requete,this);
+                result = States.authorization(requete, this);
                 break;
             case TRANSACTION:
-                result=States.transaction(requete,this);
+                result = States.transaction(requete, this);
                 break;
             default:
-                result="-ERR";
+                result = "-ERR";
                 break;
         }
-        System.out.println( this.currentstate);
+        System.out.println(this.currentstate);
 
         try {
             outToClient.writeBytes(result);
             outToClient.flush();
-            outToClient.close();
+            //outToClient.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
 
     public String getUSER() {

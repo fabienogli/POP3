@@ -12,15 +12,17 @@ public class States {
                 returnCode = Commande.apop();
                 break;
             case "USER":
+                System.out.println("envoi user");
                 if (arg.length == 2) {
                     returnCode = Commande.user(arg[1], connexion);
-                }
+                }else returnCode = "-ERR mauvais nombre arguments";
                 break;
             case "QUIT":
                 returnCode = Commande.quit(connexion);
                 //commandes non prises en charge cet etat
+                break;
             default:
-                returnCode = "-ERR";
+                returnCode = "-ERR commande non autorisee";
                 break;
         }
 
@@ -47,9 +49,13 @@ public class States {
                 Commande.delete(Integer.parseInt(arg[1]));
             case "NOOP":
                 break;
+            case "QUIT":
+                returnCode = Commande.quit(connexion);
+                //commandes non prises en charge cet etat
+                break;
             //commandes non prises en charge cet etat
             default:
-                returnCode = "-ERR";
+                returnCode = "-ERR commande non autorisee";
                 break;
         }
 
@@ -62,11 +68,13 @@ public class States {
 
         switch (arg[0]) {
             case "PASS":
+                System.out.println("envoi mdp");
                 if (arg.length == 2) {
                     Commande.pass(arg[1], connexion);
-                } else returnCode = "-ERR";
+                } else returnCode = "-ERR mauvais nombre arguments";
+                break;
             default:
-                returnCode = "-ERR";
+                returnCode = "-ERR commande non autorisee ";
                 break;
         }
         return returnCode;

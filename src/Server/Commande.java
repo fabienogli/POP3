@@ -45,6 +45,7 @@ public class Commande {
         //verifier le mot de passe pour l'identifiant donné
         if(isPassValid(password,connexion.getUSER())){
             connexion.setCurrentstate(StateEnum.TRANSACTION);
+            connexion.setMailBox(addMail(connexion.getUSER()));
             result = "+OK Authentification reussie";
         }
 
@@ -201,7 +202,7 @@ public class Commande {
         }
         return false;
     }
-    private MessageBox addMail(String user) {
+    private static MessageBox addMail(String user) {
         MessageBox mailBox = new MessageBox();
         File repository = new File(cheminDatabase+"/"+user+"_messages");
         List<Message> mails = new ArrayList<>();
@@ -224,7 +225,7 @@ public class Commande {
         return mailBox;
     }
 
-    private Message parseMail(String rawMail){
+    private static Message parseMail(String rawMail){
         Message mail = new Message();
         String line = "";
         int index = 0;
@@ -240,7 +241,7 @@ public class Commande {
                 if (line.isEmpty())
                     end = true;
                 else {
-                    this.parseHeader(mail, line);
+                    parseHeader(mail, line);
                     line = "";
                 }
             } else
@@ -264,7 +265,7 @@ public class Commande {
 
         return mail;
     }
-    private void parseHeader(Message mail, String line)
+    private static void parseHeader(Message mail, String line)
             //throws BadMailFormat
     {
         boolean delimiteurFound = false;
