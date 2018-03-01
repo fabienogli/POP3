@@ -75,10 +75,21 @@ public class Commande {
         return null;
     }
 
-    public static String retrieve(int numMessage) {
-
-
-        return null;
+    public static String retrieve(int num,Connexion connexion) {
+        StringBuilder mailSb = new StringBuilder();
+            if (num <= 0 || num > connexion.getMailBox().getNumberMessages()) {
+                System.out.print("RETR echec");
+                return "-ERR no such messages,only " + connexion.getMailBox().getNumberMessages() + " messages in maildrop";
+            } else {
+                Message mail = connexion.getMailBox().getMessage(num - 1);
+                if (mail.isDeleteMark()) {
+                    System.out.print("RETR echec");
+                    return "-ERR message " + num + " is deleted";
+                }
+                System.out.print("RETR succes");
+                mailSb.append("+OK " + mail.size() + " octets").append("\r\n").append(mail.toString());
+            }
+        return mailSb.toString();
     }
     public static String ready(){
         //envoi message ready
