@@ -1,6 +1,7 @@
 package Server;
 
 import java.util.Date;
+import java.util.Map;
 
 public class Message {
 
@@ -11,7 +12,7 @@ public class Message {
     private Date date;
     private String sujet;
     private String corps;
-
+    private Map<String,String> optionalHeaders;
     private boolean deleteMark = false;
 
     public Message(String id) {
@@ -107,5 +108,9 @@ public class Message {
     }
     public int size() {
         return this.toString().getBytes().length;
+    }
+
+    public void addOptionalHeader(String key, String value) {
+        this.optionalHeaders.put(key, value);
     }
 }

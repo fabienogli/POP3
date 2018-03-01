@@ -5,6 +5,9 @@ import java.math.BigInteger;
 import java.net.HttpRetryException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -257,9 +260,65 @@ public class Commande {
             else
                 content += rawMail.charAt(index++);
         }
-        mail.setContent(content);
+        mail.setCorps(content);
 
         return mail;
+    }
+    private void parseHeader(Message mail, String line)
+            //throws BadMailFormat
+    {
+        boolean delimiteurFound = false;
+        String key = "";
+        String value = "";
+        char item;
+        String test = "";
+        for (int i = 0; i < line.length(); i++) {
+            item = line.charAt(i);
+            test += item;
+            if (!delimiteurFound && item == ':')
+                delimiteurFound = true;
+            else {
+                if (delimiteurFound)
+                    value += item;
+                else
+                    key += item;
+            }
+
+        }
+
+        if (key.isEmpty() || value.isEmpty())
+            //throw new BadMailFormat(line + "\r\n" + "Incorrect Header");
+
+        key = key.trim();
+        value = value.trim();
+
+        switch (key.toUpperCase()) {
+            case "TO":
+                String valuesTo[] = value.split(" ");
+                mail.setDestinataire(new Utilisateur(valuesTo[0],valuesTo[1]));
+                break;
+            case "FROM":
+                String valuesFrom[] = value.split(" ");
+                mail.setAuteur(new Utilisateur(valuesFrom[0],valuesFrom[1]));
+                break;
+            case "SUBJECT":
+                mail.setSujet(value);
+                break;
+            case "DATE":
+                DateFormat format = new SimpleDateFormat("EEE, d MMM YYYY HH:mm:ss Z");
+                try {
+                    mail.setDate(format.parse(value));
+                } catch (ParseException e) {
+                    //throw new BadMailFormat(line + "\r\n" + "Unparsable date");
+                }
+                break;
+            case "MESSAGE-ID":
+                mail.setId(value);
+                break;
+            default:
+                mail.addOptionalHeader(key, value);
+        }
+
     }
 
 }
