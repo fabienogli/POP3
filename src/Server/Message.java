@@ -1,0 +1,93 @@
+package Server;
+
+import java.util.Date;
+
+public class Message {
+
+    private String id;
+    private Utilisateur destinataire;
+    private Utilisateur auteur;
+    private Date date;
+    private String sujet;
+    private String corps;
+
+    public Message(String id) {
+        this.id = id;
+    }
+
+    public Message(String id, Utilisateur destinataire, Utilisateur auteur, Date date, String sujet, String corps) {
+        this.id = id;
+        this.destinataire = destinataire;
+        this.auteur = auteur;
+        this.date = date;
+        this.sujet = sujet;
+        this.corps = corps;
+    }
+
+    public Utilisateur getDestinataire() {
+        return destinataire;
+    }
+
+    public void setDestinataire(Utilisateur destinataire) {
+        this.destinataire = destinataire;
+    }
+
+    public Utilisateur getAuteur() {
+        return auteur;
+    }
+
+    public void setAuteur(Utilisateur auteur) {
+        this.auteur = auteur;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getSujet() {
+        return sujet;
+    }
+
+    public void setSujet(String sujet) {
+        this.sujet = sujet;
+    }
+
+    public String getCorps() {
+        return corps;
+    }
+
+    public void setCorps(String corps) {
+        this.corps = corps;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String toString() {
+            StringBuilder generateMessage = new StringBuilder();
+            generateMessage.append("From: ")
+                    .append(this.getAuteur().toString())
+                    .append("\nTo: ")
+                    .append(this.getDestinataire().toString())
+                    .append("\nSubject: ")
+                    .append(this.getSujet())
+                    .append("\nDate : ")
+                    .append(this.getDate().toString())
+                    .append("\nMessage-ID <")
+                    .append(this.getId())
+                    .append("@local.machine.example>\n")
+                    .append(this.getCorps())
+                    .append("\n.");
+
+            return generateMessage.toString();
+    }
+}
