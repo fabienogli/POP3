@@ -43,7 +43,7 @@ public class States {
                 Commande.stat();
                 break;
             case "RETR":
-                Commande.retrieve(Integer.parseInt(arg[1]));
+                Commande.retrieve(Integer.parseInt(arg[1]),connexion);
                 break;
             case "DELE":
                 Commande.delete(Integer.parseInt(arg[1]));

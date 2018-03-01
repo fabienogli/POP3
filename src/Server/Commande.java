@@ -18,6 +18,7 @@ public class Commande {
     protected static final int i_PASS = 1;
     protected static final int i_ADRESSE = 2;
     private static String cheminDatabase = "src/database/";
+
     public static String quit(Connexion connexion) {
         String result = "+OK Serveur POP3 de Mark-Florian-Fabien signing off";
         connexion.setCurrentstate(StateEnum.ATTENTE_CONNEXION);
@@ -29,10 +30,10 @@ public class Commande {
     public static String user(String user, Connexion connexion) {
         String result = "-ERR";
         //verifier si la boite au lettres existe
-        if (isUserValid(user)){
+        if (isUserValid(user)) {
             connexion.setUSER(user);
             connexion.setCurrentstate(StateEnum.AUTHENTIFICATION);
-            result="+OK Boite aux lettre valide";
+            result = "+OK Boite aux lettre valide";
         }
 
         //si oui
@@ -43,7 +44,7 @@ public class Commande {
     public static String pass(String password, Connexion connexion) {
         String result = "-ERR";
         //verifier le mot de passe pour l'identifiant donné
-        if(isPassValid(password,connexion.getUSER())){
+        if (isPassValid(password, connexion.getUSER())) {
             connexion.setCurrentstate(StateEnum.TRANSACTION);
             connexion.setMailBox(addMail(connexion.getUSER()));
             result = "+OK Authentification reussie";
@@ -75,23 +76,25 @@ public class Commande {
         return null;
     }
 
-    public static String retrieve(int num,Connexion connexion) {
+    public static String retrieve(int num, Connexion connexion) {
         StringBuilder mailSb = new StringBuilder();
-            if (num <= 0 || num > connexion.getMailBox().getNumberMessages()) {
-                System.out.print("RETR echec");
-                return "-ERR no such messages,only " + connexion.getMailBox().getNumberMessages() + " messages in maildrop";
-            } else {
-                Message mail = connexion.getMailBox().getMessage(num - 1);
-                if (mail.isDeleteMark()) {
-                    System.out.print("RETR echec");
-                    return "-ERR message " + num + " is deleted";
-                }
-                System.out.print("RETR succes");
-                mailSb.append("+OK " + mail.size() + " octets").append("\r\n").append(mail.toString());
+        if (num <= 0 || num > connexion.getMailBox().getNumberMessages()) {
+            System.out.println(connexion.getMailBox().getNumberMessages());
+            System.out.print("RETR echec mauvais numero de message");
+            return "-ERR no such messages,only " + connexion.getMailBox().getNumberMessages() + " messages in maildrop";
+        } else {
+            Message mail = connexion.getMailBox().getMessage(num - 1);
+            if (mail.isDeleteMark()) {
+                System.out.print("RETR echec mail supprime");
+                return "-ERR message " + num + " is deleted";
             }
+            System.out.print("RETR succes");
+            mailSb.append("+OK " + mail.size() + " octets").append("\r\n").append(mail.toString());
+        }
         return mailSb.toString();
     }
-    public static String ready(){
+
+    public static String ready() {
         //envoi message ready
         return "Serveur POP3 de Mark-Fabien-Florian Ready";
     }
@@ -102,7 +105,7 @@ public class Commande {
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             byte[] encrApop = md5.digest(toEncrypt.getBytes());
             for (int i = 0; i < encrApop.length; ++i) {
-                encryptMd5.append(Integer.toHexString((encrApop[i] & 0xFF) | 0x100).substring(1,3));
+                encryptMd5.append(Integer.toHexString((encrApop[i] & 0xFF) | 0x100).substring(1, 3));
             }
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -119,10 +122,8 @@ public class Commande {
             BufferedReader db = new BufferedReader(fileReader);
             String chaine;
             int i = 1;
-            while((chaine = db.readLine())!= null)
-            {
-                if(i > 1)
-                {
+            while ((chaine = db.readLine()) != null) {
+                if (i > 1) {
                     String[] tabChaine = chaine.split(",");
                     for (int x = 0; x < tabChaine.length; x++) {
                         if (x == i_USER && USER.equals(tabChaine[x]) && encryptApop(tabChaine[x + 2]).equals(APOP)) {
@@ -135,9 +136,7 @@ public class Commande {
                 i++;
             }
             db.close();
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.out.println("Le fichier est introuvable !");
         } catch (IOException e) {
             e.printStackTrace();
@@ -155,10 +154,8 @@ public class Commande {
             BufferedReader db = new BufferedReader(fileReader);
             String chaine;
             int i = 1;
-            while((chaine = db.readLine())!= null)
-            {
-                if(i > 1)
-                {
+            while ((chaine = db.readLine()) != null) {
+                if (i > 1) {
                     String[] tabChaine = chaine.split(",");
                     for (int x = 0; x < tabChaine.length; x++) {
                         if (x == i_USER && USER.equals(tabChaine[x])) {
@@ -169,9 +166,7 @@ public class Commande {
                 i++;
             }
             db.close();
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.out.println("Le fichier est introuvable !");
         } catch (IOException e) {
             e.printStackTrace();
@@ -179,7 +174,7 @@ public class Commande {
         return false;
     }
 
-    public static boolean isPassValid(String PASS,String USER) {
+    public static boolean isPassValid(String PASS, String USER) {
         if (USER == null || PASS == null) {
             return false;
         }
@@ -188,10 +183,8 @@ public class Commande {
             BufferedReader db = new BufferedReader(fileReader);
             String chaine;
             int i = 1;
-            while((chaine = db.readLine())!= null)
-            {
-                if(i > 1)
-                {
+            while ((chaine = db.readLine()) != null) {
+                if (i > 1) {
                     String[] tabChaine = chaine.split(",");
                     for (int x = 0; x < tabChaine.length; x++) {
                         if (x == i_USER && USER.equals(tabChaine[x]) && tabChaine[x + 1].equals(PASS)) {
@@ -204,59 +197,67 @@ public class Commande {
                 i++;
             }
             db.close();
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.out.println("Le fichier est introuvable !");
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
     }
+
     private static MessageBox addMail(String user) {
         MessageBox mailBox = new MessageBox();
-        File repository = new File(cheminDatabase+"/"+user+"_messages");
         List<Message> mails = new ArrayList<>();
-        File[] files = repository.listFiles();
-        if (files != null && files.length > 0)
-            Arrays.stream(files).forEach(file -> {
-                try {
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-                    String line;
-                    String content = "";
-                    while ((line = reader.readLine()) != null) {
-                        content += line + "\r\n";
-                    }
+        try {
+            FileReader fileReader = new FileReader(cheminDatabase + user +"_messages");
+            BufferedReader db = new BufferedReader(fileReader);
+            String line;
+            String content = "";
+            String lineTmp="";
+            while ((line = db.readLine()) != null) {
+                System.out.println("in the mailbox 1 ");
+                lineTmp = line + "\r\n";
+                content += lineTmp;
+                System.out.println(line);
+                if(lineTmp.equals(".\r\n")){
+                    System.out.println("in the mailbox 2");
+                    //System.out.println(line);
+                    //System.out.println(content);
                     mails.add(parseMail(content));
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    content = "";
                 }
-            });
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mailBox.setMessages(mails);
         return mailBox;
     }
 
-    private static Message parseMail(String rawMail){
+    private static Message parseMail(String rawMail) {
         Message mail = new Message();
         String line = "";
         int index = 0;
         boolean end = false;
-
-
         //Parse header
         while (!end) {
-            if (!(index < rawMail.length()))
-               // throw new BadMailFormat("End of header \"\\r\\n'\" not found ");
-            if (rawMail.charAt(index) == '\r' && rawMail.charAt(index + 1) == '\n') {
-                index += 2;
-                if (line.isEmpty())
-                    end = true;
-                else {
-                    parseHeader(mail, line);
-                    line = "";
-                }
-            } else
-                line += rawMail.charAt(index++);
+
+            //if (!(index < rawMail.length()))
+                // throw new BadMailFormat("End of header \"\\r\\n'\" not found ");
+                if (rawMail.charAt(index) == '\r' && rawMail.charAt(index + 1) == '\n') {
+
+                    index += 2;
+                    if (line.isEmpty())
+                        end = true;
+                    else {
+
+                        parseHeader(mail, line);
+                        line = "";
+                    }
+                } else
+                    line += rawMail.charAt(index++);
         }
 
         //Parse content
@@ -264,9 +265,9 @@ public class Commande {
         end = false;
         while (!end) {
             if (!(index < rawMail.length()))
-               // throw new BadMailFormat("End of header \".\\r\\n'\" not found ");
-            if (rawMail.charAt(index) == '.' && rawMail.charAt(index + 1) == '\r' && rawMail.charAt(index + 2) == '\n')
-                end = true;
+                // throw new BadMailFormat("End of header \".\\r\\n'\" not found ");
+                if (rawMail.charAt(index) == '.' && rawMail.charAt(index + 1) == '\r' && rawMail.charAt(index + 2) == '\n')
+                    end = true;
             if (rawMail.charAt(index) == '\r' && rawMail.charAt(index + 1) == '\n')
                 index += 2;
             else
@@ -276,8 +277,9 @@ public class Commande {
 
         return mail;
     }
+
     private static void parseHeader(Message mail, String line)
-            //throws BadMailFormat
+    //throws BadMailFormat
     {
         boolean delimiteurFound = false;
         String key = "";
@@ -301,17 +303,19 @@ public class Commande {
         if (key.isEmpty() || value.isEmpty())
             //throw new BadMailFormat(line + "\r\n" + "Incorrect Header");
 
-        key = key.trim();
+            key = key.trim();
         value = value.trim();
+        System.out.println(key);
+        System.out.println(value);
 
         switch (key.toUpperCase()) {
             case "TO":
                 String valuesTo[] = value.split(" ");
-                mail.setDestinataire(new Utilisateur(valuesTo[0],valuesTo[1]));
+                mail.setDestinataire(new Utilisateur(valuesTo[0], valuesTo[1]));
                 break;
             case "FROM":
                 String valuesFrom[] = value.split(" ");
-                mail.setAuteur(new Utilisateur(valuesFrom[0],valuesFrom[1]));
+                mail.setAuteur(new Utilisateur(valuesFrom[0], valuesFrom[1]));
                 break;
             case "SUBJECT":
                 mail.setSujet(value);
