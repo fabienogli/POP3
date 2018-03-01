@@ -13,6 +13,7 @@ public class Connexion implements Runnable {
     private int clientPort = 0;
     private StateEnum currentstate = StateEnum.ATTENTE_CONNEXION;
     private String USER;
+    private MessageBox mailBox;
     private final int i_USER = 0;
     private final int i_PASS = 1;
 
@@ -109,5 +110,13 @@ public class Connexion implements Runnable {
 
     public void setUSER(String USER) {
         this.USER = USER;
+    }
+
+    public MessageBox getMailBox() {
+        return mailBox;
+    }
+
+    public void setMailBox(MessageBox mailBox) {
+        this.mailBox = mailBox;
     }
 }

@@ -17,7 +17,7 @@ public class States {
                 }
                 break;
             case "QUIT":
-                returnCode = Commande.quit();
+                returnCode = Commande.quit(connexion);
                 //commandes non prises en charge cet etat
             default:
                 returnCode = "-ERR";
