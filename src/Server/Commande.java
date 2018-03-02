@@ -205,76 +205,51 @@ public class Commande {
         return false;
     }
 
-    private static MessageBox addMail(String user) {
+
+    protected static MessageBox addMail(String user) {
         MessageBox mailBox = new MessageBox();
-        List<Message> mails = new ArrayList<>();
+        List<Message> mails = new ArrayList<Message>();
+        StringBuilder rawMessages = new StringBuilder();
         try {
             FileReader fileReader = new FileReader(cheminDatabase + user +"_messages");
             BufferedReader db = new BufferedReader(fileReader);
             String line;
-            String content = "";
-            String lineTmp="";
             while ((line = db.readLine()) != null) {
-                System.out.println("in the mailbox 1 ");
-                lineTmp = line + "\r\n";
-                content += lineTmp;
-                System.out.println(line);
-                if(lineTmp.equals(".\r\n")){
-                    System.out.println("in the mailbox 2");
-                    //System.out.println(line);
-                    //System.out.println(content);
-                    mails.add(parseMail(content));
-                    content = "";
-                }
+                rawMessages.append(line);
+                rawMessages.append("\n");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        String[] rawMessagesInArray = rawMessages.toString().split("\n.\n\n");
+        for (String rawMessage : rawMessagesInArray) {
+            mails.add(parseMail(rawMessage));
+        }
         mailBox.setMessages(mails);
         return mailBox;
     }
 
     private static Message parseMail(String rawMail) {
         Message mail = new Message();
-        String line = "";
-        int index = 0;
-        boolean end = false;
         //Parse header
-        while (!end) {
+        StringBuilder content = new StringBuilder();
+        String[] rawMailPerLine = rawMail.split("\n");
+        boolean headersDone = false;
+        for (String line : rawMailPerLine) {
 
-            //if (!(index < rawMail.length()))
-                // throw new BadMailFormat("End of header \"\\r\\n'\" not found ");
-                if (rawMail.charAt(index) == '\r' && rawMail.charAt(index + 1) == '\n') {
-
-                    index += 2;
-                    if (line.isEmpty())
-                        end = true;
-                    else {
-
-                        parseHeader(mail, line);
-                        line = "";
-                    }
-                } else
-                    line += rawMail.charAt(index++);
+            if (line.length() == 0) {
+                headersDone = true;
+                System.out.println("HEADERSDONE");
+                continue;
+            }
+            if (!headersDone) {
+                parseHeader(mail, line);
+            }else{
+                content.append(line);
+                content.append("\n");
+            }
         }
-
-        //Parse content
-        String content = "";
-        end = false;
-        while (!end) {
-            if (!(index < rawMail.length()))
-                // throw new BadMailFormat("End of header \".\\r\\n'\" not found ");
-                if (rawMail.charAt(index) == '.' && rawMail.charAt(index + 1) == '\r' && rawMail.charAt(index + 2) == '\n')
-                    end = true;
-            if (rawMail.charAt(index) == '\r' && rawMail.charAt(index + 1) == '\n')
-                index += 2;
-            else
-                content += rawMail.charAt(index++);
-        }
-        mail.setCorps(content);
-
+        mail.setCorps(content.toString());
         return mail;
     }
 
@@ -297,16 +272,12 @@ public class Commande {
                 else
                     key += item;
             }
-
         }
-
-        if (key.isEmpty() || value.isEmpty())
-            //throw new BadMailFormat(line + "\r\n" + "Incorrect Header");
-
-            key = key.trim();
+        if (!delimiteurFound) {
+            return;
+        }
+        key = key.trim();
         value = value.trim();
-        System.out.println(key);
-        System.out.println(value);
 
         switch (key.toUpperCase()) {
             case "TO":
@@ -325,7 +296,7 @@ public class Commande {
                 try {
                     mail.setDate(format.parse(value));
                 } catch (ParseException e) {
-                    //throw new BadMailFormat(line + "\r\n" + "Unparsable date");
+                    e.printStackTrace();
                 }
                 break;
             case "MESSAGE-ID":
@@ -333,6 +304,7 @@ public class Commande {
                 break;
             default:
                 mail.addOptionalHeader(key, value);
+                break;
         }
 
     }

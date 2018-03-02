@@ -29,7 +29,13 @@ public class Message {
     }
 
     public Message() {
-
+        Utilisateur johnDoe = new Utilisateur("unknown", "unknown");
+        this.id = "unknown";
+        this.destinataire = johnDoe;
+        this.auteur = johnDoe;
+        this.date = new Date();
+        this.sujet = "unknown";
+        this.corps = "unknown";
     }
 
     public Utilisateur getDestinataire() {
