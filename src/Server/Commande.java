@@ -215,12 +215,12 @@ public class Commande {
             String content = "";
             String lineTmp="";
             while ((line = db.readLine()) != null) {
-                System.out.println("in the mailbox 1 ");
+                //System.out.println("in the mailbox 1 ");
                 lineTmp = line + "\r\n";
                 content += lineTmp;
                 System.out.println(line);
                 if(lineTmp.equals(".\r\n")){
-                    System.out.println("in the mailbox 2");
+                    //System.out.println("in the mailbox 2");
                     //System.out.println(line);
                     //System.out.println(content);
                     mails.add(parseMail(content));
@@ -252,7 +252,8 @@ public class Commande {
                     if (line.isEmpty())
                         end = true;
                     else {
-
+                        System.out.println("ici");
+                        System.out.println(line);
                         parseHeader(mail, line);
                         line = "";
                     }
@@ -266,6 +267,7 @@ public class Commande {
         while (!end) {
             if (!(index < rawMail.length()))
                 // throw new BadMailFormat("End of header \".\\r\\n'\" not found ");
+                //verifier string index error
                 if (rawMail.charAt(index) == '.' && rawMail.charAt(index + 1) == '\r' && rawMail.charAt(index + 2) == '\n')
                     end = true;
             if (rawMail.charAt(index) == '\r' && rawMail.charAt(index + 1) == '\n')
@@ -300,15 +302,16 @@ public class Commande {
 
         }
 
-        if (key.isEmpty() || value.isEmpty())
+        //if (key.isEmpty() || value.isEmpty())
             //throw new BadMailFormat(line + "\r\n" + "Incorrect Header");
 
             key = key.trim();
         value = value.trim();
-        System.out.println(key);
-        System.out.println(value);
+        System.out.println(key.toUpperCase());
+        //System.out.println(value);
 
         switch (key.toUpperCase()) {
+
             case "TO":
                 String valuesTo[] = value.split(" ");
                 mail.setDestinataire(new Utilisateur(valuesTo[0], valuesTo[1]));
@@ -333,6 +336,7 @@ public class Commande {
                 break;
             default:
                 mail.addOptionalHeader(key, value);
+                break;
         }
 
     }
