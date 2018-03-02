@@ -8,9 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Commande {
 
@@ -91,6 +89,7 @@ public class Commande {
             System.out.print("RETR succes");
             mailSb.append("+OK " + mail.size() + " octets").append("\r\n").append(mail.toString());
         }
+        System.out.println(mailSb.toString());
         return mailSb.toString();
     }
 
@@ -283,7 +282,8 @@ public class Commande {
         }
         key = key.trim();
         value = value.trim();
-
+        System.out.println(key);
+        System.out.println(value);
         switch (key.toUpperCase()) {
 
             case "TO":
@@ -298,7 +298,9 @@ public class Commande {
                 mail.setSujet(value);
                 break;
             case "DATE":
-                DateFormat format = new SimpleDateFormat("EEE, d MMM YYYY HH:mm:ss Z");
+                DateFormat format = new SimpleDateFormat("EEE, dd MMM YYYY HH:mm:ss Z", Locale.US);
+                /*Date date = new Date();
+                System.out.println(format.format(date));*/
                 try {
                     mail.setDate(format.parse(value));
                 } catch (ParseException e) {

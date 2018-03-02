@@ -37,16 +37,16 @@ public class States {
         switch (arg[0]) {
             //commandes prises en charge par cet etat
             case "LIST":
-                Commande.list();
+                returnCode+=Commande.list();
                 break;
             case "STAT":
-                Commande.stat();
+                returnCode+=Commande.stat();
                 break;
             case "RETR":
-                Commande.retrieve(Integer.parseInt(arg[1]),connexion);
+                returnCode +=Commande.retrieve(Integer.parseInt(arg[1]),connexion);
                 break;
             case "DELE":
-                Commande.delete(Integer.parseInt(arg[1]));
+                returnCode+=Commande.delete(Integer.parseInt(arg[1]));
             case "NOOP":
                 break;
             case "QUIT":
