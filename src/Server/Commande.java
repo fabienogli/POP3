@@ -26,12 +26,12 @@ public class Commande {
     }
 
     public static String user(String user, Connexion connexion) {
-        String result = "-ERR";
-        //verifier si la boite au lettres existe
+        String result = "-ERR Boite aux lettres invalide";
+        //verifier si la boite aux lettres existe
         if (isUserValid(user)) {
             connexion.setUSER(user);
             connexion.setCurrentstate(StateEnum.AUTHENTIFICATION);
-            result = "+OK Boite aux lettre valide";
+            result = "+OK Boite aux lettres valide";
         }
 
         //si oui
@@ -40,7 +40,7 @@ public class Commande {
     }
 
     public static String pass(String password, Connexion connexion) {
-        String result = "-ERR";
+        String result = "-ERR Mot de passe invalide";
         //verifier le mot de passe pour l'identifiant donné
         if (isPassValid(password, connexion.getUSER())) {
             connexion.setCurrentstate(StateEnum.TRANSACTION);
@@ -57,10 +57,32 @@ public class Commande {
         return result;
     }
 
-    public static String list() {
-        String result = "-ERR";
+    public static String list(Connexion connexion) {
+        StringBuilder result = new StringBuilder();
+        if (connexion.getMailBox().getNumberMessages() == 0) {
+            result.append("+OK ").append(" no message");
+        } else if (connexion.getMailBox().getNumberMessages() == 1) {
+            result.append("+OK ").append(" 1 message ");
+            result.append("(").append(connexion.getMailBox().getBytes()).append(")");
+            result.append(connexion.getMailBox().buildList());
+        } else {
+            result.append("+OK ").append(connexion.getMailBox().getNumberMessages()).append(" messages");
+            result.append("(").append(connexion.getMailBox().getBytes()).append(")");
+            result.append(connexion.getMailBox().buildList());
+        }
 
-        return null;
+        return result.toString();
+    }
+
+    public static String list(Connexion connexion, int numMsg) {
+        StringBuilder sb = new StringBuilder();
+        if (!connexion.getMailBox().getMessage(numMsg - 1).isDeleteMark()) {
+            sb.append("+OK ").append(numMsg).append(" ").append(connexion.getMailBox().getMessage(numMsg - 1));
+        } else {
+            sb.append("-ERR numero de message invalide");
+        }
+
+        return sb.toString();
     }
 
     public static String stat() {
@@ -210,7 +232,7 @@ public class Commande {
         List<Message> mails = new ArrayList<Message>();
         StringBuilder rawMessages = new StringBuilder();
         try {
-            FileReader fileReader = new FileReader(cheminDatabase + user +"_messages");
+            FileReader fileReader = new FileReader(cheminDatabase + user + "_messages");
             BufferedReader db = new BufferedReader(fileReader);
             String line;
             while ((line = db.readLine()) != null) {
@@ -231,8 +253,6 @@ public class Commande {
     private static Message parseMail(String rawMail) {
         Message mail = new Message();
         //Parse header
-
-
         StringBuilder content = new StringBuilder();
         String[] rawMailPerLine = rawMail.split("\n");
         boolean headersDone = false;
@@ -245,7 +265,7 @@ public class Commande {
             }
             if (!headersDone) {
                 parseHeader(mail, line);
-            }else{
+            } else {
                 content.append(line);
                 content.append("\n");
             }

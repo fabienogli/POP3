@@ -8,6 +8,7 @@ public class MessageBox {
     private String name;
     private String password;
     private String address;
+
     private List<Message> Messages;
     private boolean blocked = false;
 
@@ -98,5 +99,13 @@ public class MessageBox {
 
     public void setMessages(List<Message> Messages) {
         this.Messages = Messages;
+    }
+
+    public int getBytes(){
+        int size = 0;
+        for(Message message:Messages){
+            size+= message.size();
+        }
+        return size;
     }
 }

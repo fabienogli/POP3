@@ -112,6 +112,7 @@ public class Message {
     public void setDeleteMark(boolean deleteMark) {
         this.deleteMark = deleteMark;
     }
+
     public int size() {
         return this.toString().getBytes().length;
     }

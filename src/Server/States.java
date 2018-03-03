@@ -15,7 +15,7 @@ public class States {
                 System.out.println("envoi user");
                 if (arg.length == 2) {
                     returnCode = Commande.user(arg[1], connexion);
-                }else returnCode = "-ERR mauvais nombre arguments";
+                } else returnCode = "-ERR mauvais nombre arguments";
                 break;
             case "QUIT":
                 returnCode = Commande.quit(connexion);
@@ -37,20 +37,36 @@ public class States {
         switch (arg[0]) {
             //commandes prises en charge par cet etat
             case "LIST":
-                returnCode+=Commande.list();
+                if (arg.length == 1) {
+                    returnCode += Commande.list(connexion);
+                } else if(arg.length==2){
+                    //verifier que le message nest pas marqué a effacer
+                    returnCode+= Commande.list(connexion,Integer.parseInt(arg[1]));
+                }
+                else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "STAT":
-                returnCode+=Commande.stat();
+                if (arg.length == 1) {
+                    returnCode += Commande.stat();
+                } else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "RETR":
-                returnCode +=Commande.retrieve(Integer.parseInt(arg[1]),connexion);
+                //verifier que le message nest pas marqué a effacer
+                if (arg.length == 2) {
+                    returnCode += Commande.retrieve(Integer.parseInt(arg[1]), connexion);
+                } else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "DELE":
-                returnCode+=Commande.delete(Integer.parseInt(arg[1]));
+                //verifier que le message nest pas marqué a effacer
+                if (arg.length == 2) {
+                    returnCode += Commande.delete(Integer.parseInt(arg[1]));
+                } else returnCode += "-ERR nombre arguments invalide";
             case "NOOP":
                 break;
             case "QUIT":
-                returnCode = Commande.quit(connexion);
+                if (arg.length == 1) {
+                    returnCode = Commande.quit(connexion);
+                } else returnCode += "-ERR nombre arguments invalide";
                 //commandes non prises en charge cet etat
                 break;
             //commandes non prises en charge cet etat
@@ -70,7 +86,7 @@ public class States {
             case "PASS":
                 System.out.println("envoi mdp");
                 if (arg.length == 2) {
-                    Commande.pass(arg[1], connexion);
+                    returnCode += Commande.pass(arg[1], connexion);
                 } else returnCode = "-ERR mauvais nombre arguments";
                 break;
             default:
