@@ -76,24 +76,37 @@ public class Commande {
 
     public static String list(Connexion connexion, int numMsg) {
         StringBuilder sb = new StringBuilder();
-        if (!connexion.getMailBox().getMessage(numMsg - 1).isDeleteMark()) {
-            sb.append("+OK ").append(numMsg).append(" ").append(connexion.getMailBox().getMessage(numMsg - 1));
-        } else {
+        if (((numMsg - 1) < 0) || ((numMsg - 1) > connexion.getMailBox().getNumberMessages())) {
             sb.append("-ERR numero de message invalide");
+        } else if (connexion.getMailBox().getMessage(numMsg - 1).isDeleteMark()) {
+            sb.append("-ERR message marque supprime");
+        } else {
+            sb.append("+OK ").append(numMsg).append(" ").append(connexion.getMailBox().getMessage(numMsg - 1));
         }
 
         return sb.toString();
     }
 
-    public static String stat() {
+    public static String stat(Connexion connexion) {
 /*" +OK " suivi par un simple espace, le nombre de message dans le dépôt de courrier,
  un simple espace et la taille du dépôt de courrier en octets*/
-        return null;
+        StringBuilder statSb = new StringBuilder();
+        statSb.append("+OK ").append(connexion.getMailBox().getNumberMessages()).append(" ").append(connexion.getMailBox().getBytes());
+
+        return statSb.toString();
     }
 
-    public static String delete(int numMessage) {
+    public static String delete(Connexion connexion,int numMsg) {
+        StringBuilder sb = new StringBuilder();
+        if (((numMsg - 1) < 0) || ((numMsg - 1) > connexion.getMailBox().getNumberMessages())) {
+            sb.append("-ERR numero de message invalide");
+        } else if (connexion.getMailBox().getMessage(numMsg - 1).isDeleteMark()) {
+            sb.append("-ERR message ").append(numMsg).append(" deja marque supprime");
+        } else {
+            sb.append("+OK ").append("message ").append(numMsg).append("supprime");
+        }
 
-        return null;
+        return sb.toString();
     }
 
     public static String retrieve(int num, Connexion connexion) {

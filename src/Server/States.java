@@ -47,7 +47,7 @@ public class States {
                 break;
             case "STAT":
                 if (arg.length == 1) {
-                    returnCode += Commande.stat();
+                    returnCode += Commande.stat(connexion);
                 } else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "RETR":
@@ -59,7 +59,7 @@ public class States {
             case "DELE":
                 //verifier que le message nest pas marqué a effacer
                 if (arg.length == 2) {
-                    returnCode += Commande.delete(Integer.parseInt(arg[1]));
+                    returnCode += Commande.delete(connexion,Integer.parseInt(arg[1]));
                 } else returnCode += "-ERR nombre arguments invalide";
             case "NOOP":
                 break;
