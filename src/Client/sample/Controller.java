@@ -1,4 +1,4 @@
-package sample;
+package Client.sample;
 
 public class Controller {
 }

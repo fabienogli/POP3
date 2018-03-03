@@ -1,4 +1,4 @@
-package Application;
+package Client.Application;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -18,7 +18,6 @@ public class Client {
 
         adresseIp = java.net.InetAddress.getByName("localhost");
         clientSocket = new Socket(adresseIp, 2026);
-
     }
 
     public Client(String adresseIp, String fichier) throws IOException{
