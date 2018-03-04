@@ -1,4 +1,4 @@
-package Client.sample;
+package Client.Interface;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,8 +12,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("vueClient.fxml"));
         primaryStage.setTitle("Client POP3");
-        primaryStage.setScene(new Scene(root, 560, 360));
+        primaryStage.setScene(new Scene(root, 560, 390));
         primaryStage.show();
+
     }
 
 
