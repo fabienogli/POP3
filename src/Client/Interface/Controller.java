@@ -29,13 +29,13 @@ public class Controller {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
         TextField username = new TextField();
-        username.setPromptText("Username");
+        username.setPromptText("Utilisateur");
         PasswordField password = new PasswordField();
-        password.setPromptText("Password");
+        password.setPromptText("Mot de passe");
 
-        grid.add(new Label("Username:"), 0, 0);
+        grid.add(new Label("login:"), 0, 0);
         grid.add(username, 1, 0);
-        grid.add(new Label("Password:"), 0, 1);
+        grid.add(new Label("mot de passe:"), 0, 1);
         grid.add(password, 1, 1);
 
 // Enable/Disable login button depending on whether a username was entered.
