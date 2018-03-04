@@ -33,9 +33,9 @@ public class Utilisateur {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(this.getNom())
                 .append(" ")
-                .append("<")
-                .append(this.getEmail())
-                .append(">");
+                //.append("<")
+                .append(this.getEmail());
+                //.append(">");
         return stringBuilder.toString();
     }
 }

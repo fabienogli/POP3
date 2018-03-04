@@ -1,15 +1,19 @@
 package Server;
 
 import java.util.Date;
+import java.util.Map;
 
 public class Message {
 
     private String id;
+
     private Utilisateur destinataire;
     private Utilisateur auteur;
     private Date date;
     private String sujet;
     private String corps;
+    private Map<String,String> optionalHeaders;
+    private boolean deleteMark = false;
 
     public Message(String id) {
         this.id = id;
@@ -22,6 +26,16 @@ public class Message {
         this.date = date;
         this.sujet = sujet;
         this.corps = corps;
+    }
+
+    public Message() {
+        Utilisateur johnDoe = new Utilisateur("unknown", "unknown");
+        this.id = "unknown";
+        this.destinataire = johnDoe;
+        this.auteur = johnDoe;
+        this.date = new Date();
+        this.sujet = "unknown";
+        this.corps = "unknown";
     }
 
     public Utilisateur getDestinataire() {
@@ -89,5 +103,21 @@ public class Message {
                     .append("\n.");
 
             return generateMessage.toString();
+    }
+
+    public boolean isDeleteMark() {
+        return deleteMark;
+    }
+
+    public void setDeleteMark(boolean deleteMark) {
+        this.deleteMark = deleteMark;
+    }
+
+    public int size() {
+        return this.toString().getBytes().length;
+    }
+
+    public void addOptionalHeader(String key, String value) {
+        this.optionalHeaders.put(key, value);
     }
 }

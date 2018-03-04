@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class testCommande{
+public class testCommande extends Commande {
 
     public static String getDataFromDb(int i_data) {
         String toReturn = "";
@@ -83,13 +83,17 @@ public class testCommande{
         System.out.println(Commande.isApopValid(Commande.encryptApop("will"), "foo"));
         System.out.println(Commande.isApopValid(Commande.encryptApop("begood"), "root"));
         System.out.println(Commande.isApopValid(Commande.encryptApop("strength"), "john"));
+    }
 
+    protected static void testAddMail() {
+        addMail("john");
     }
 
     public static void main(String[] args) {
-        testPass();
-        testUser();
-        testEncyptApop();
-        testApop();
+//        testPass();
+//        testUser();
+//        testEncyptApop();
+//        testApop();
+        testAddMail();
     }
 }

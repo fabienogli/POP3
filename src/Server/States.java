@@ -12,15 +12,17 @@ public class States {
                 returnCode = Commande.apop();
                 break;
             case "USER":
+                System.out.println("envoi user");
                 if (arg.length == 2) {
                     returnCode = Commande.user(arg[1], connexion);
-                }
+                } else returnCode = "-ERR mauvais nombre arguments";
                 break;
             case "QUIT":
-                returnCode = Commande.quit();
+                returnCode = Commande.quit(connexion);
                 //commandes non prises en charge cet etat
+                break;
             default:
-                returnCode = "-ERR";
+                returnCode = "-ERR commande non autorisee";
                 break;
         }
 
@@ -35,21 +37,41 @@ public class States {
         switch (arg[0]) {
             //commandes prises en charge par cet etat
             case "LIST":
-                Commande.list();
+                if (arg.length == 1) {
+                    returnCode += Commande.list(connexion);
+                } else if(arg.length==2){
+                    //verifier que le message nest pas marqué a effacer
+                    returnCode+= Commande.list(connexion,Integer.parseInt(arg[1]));
+                }
+                else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "STAT":
-                Commande.stat();
+                if (arg.length == 1) {
+                    returnCode += Commande.stat(connexion);
+                } else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "RETR":
-                Commande.retrieve(Integer.parseInt(arg[1]));
+                //verifier que le message nest pas marqué a effacer
+                if (arg.length == 2) {
+                    returnCode += Commande.retrieve(Integer.parseInt(arg[1]), connexion);
+                } else returnCode += "-ERR nombre arguments invalide";
                 break;
             case "DELE":
-                Commande.delete(Integer.parseInt(arg[1]));
+                //verifier que le message nest pas marqué a effacer
+                if (arg.length == 2) {
+                    returnCode += Commande.delete(connexion,Integer.parseInt(arg[1]));
+                } else returnCode += "-ERR nombre arguments invalide";
             case "NOOP":
+                break;
+            case "QUIT":
+                if (arg.length == 1) {
+                    returnCode = Commande.quit(connexion);
+                } else returnCode += "-ERR nombre arguments invalide";
+                //commandes non prises en charge cet etat
                 break;
             //commandes non prises en charge cet etat
             default:
-                returnCode = "-ERR";
+                returnCode = "-ERR commande non autorisee";
                 break;
         }
 
@@ -62,11 +84,13 @@ public class States {
 
         switch (arg[0]) {
             case "PASS":
+                System.out.println("envoi mdp");
                 if (arg.length == 2) {
-                    Commande.pass(arg[1], connexion);
-                } else returnCode = "-ERR";
+                    returnCode += Commande.pass(arg[1], connexion);
+                } else returnCode = "-ERR mauvais nombre arguments";
+                break;
             default:
-                returnCode = "-ERR";
+                returnCode = "-ERR commande non autorisee ";
                 break;
         }
         return returnCode;
