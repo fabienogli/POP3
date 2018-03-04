@@ -14,13 +14,28 @@ import java.util.Optional;
 
 public class Controller {
 
+    public Controller() {
+    }
 
     @FXML
-     Button list;
+    Button login;
     @FXML
-    Button retr = new Button();
+    Button list;
+    @FXML
+    Button retr ;
     @FXML
     Button dele;
+    @FXML
+    Button stat;
+
+    @FXML
+    private void initialize()
+    {
+        list.setDisable(true);
+        retr.setDisable(true);
+        dele.setDisable(true);
+        stat.setDisable(true);
+    }
 
     @FXML
     private void handleLoginButton(ActionEvent evt) {
@@ -79,6 +94,7 @@ public class Controller {
 
     @FXML
     private void handleRetrieveButton(ActionEvent event) {
+
     }
 
     @FXML
@@ -91,6 +107,12 @@ public class Controller {
 
     @FXML
     private void handleListButton() {
+    }
+
+    @FXML
+    public void disableList(){
+        list.setDisable(true);
+
     }
 
     public Button getList() {
