@@ -37,7 +37,7 @@
             </ToolBar>
          </top>
          <bottom>
-            <Label prefHeight="26.0" prefWidth="555.0" text="Label" BorderPane.alignment="CENTER" />
+            <Label prefHeight="26.0" prefWidth="555.0" text="Statut : Non connecté" BorderPane.alignment="CENTER" />
          </bottom>
       </BorderPane>
    </children>

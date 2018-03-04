@@ -130,7 +130,7 @@ public class Commande {
 
     public static String ready() {
         //envoi message ready
-        return "Serveur POP3 de Mark-Fabien-Florian Ready";
+        return "Serveur POP3 de Mark-Fabien-Florian Ready "+ generateDateStamp();
     }
 
     public static String encryptApop(String toEncrypt) {
@@ -347,6 +347,23 @@ public class Commande {
                 mail.addOptionalHeader(key, value);
                 break;
         }
+
+    }
+    private static String generateDateStamp(){
+        StringBuilder dateStamp = new StringBuilder();
+        String stamp ="";
+        Date date = new Date();
+        String uniqueID = UUID.randomUUID().toString();
+        dateStamp.append(uniqueID).append(date);
+        MessageDigest m;
+        try {
+            m= MessageDigest.getInstance("MD5");
+            m.update(dateStamp.toString().getBytes(),0,dateStamp.toString().length());
+            stamp= new BigInteger(1,m.digest()).toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "<"+stamp+">";
 
     }
 

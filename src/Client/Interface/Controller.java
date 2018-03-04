@@ -9,12 +9,13 @@ import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
 
 import javafx.event.ActionEvent;
+
 import java.util.Optional;
 
 public class Controller {
 
     @FXML
-    private void handleLoginButton(ActionEvent evt){
+    private void handleLoginButton(ActionEvent evt) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
         dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
@@ -65,6 +66,23 @@ public class Controller {
         result.ifPresent(usernamePassword -> {
             System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
         });
+
+    }
+
+    @FXML
+    private void handleRetrieveButton(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleDeleteButton(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleStatButton(ActionEvent event) {
+    }
+
+    @FXML
+    private void handleListButton() {
     }
 
 }
