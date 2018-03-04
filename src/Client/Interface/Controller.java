@@ -14,6 +14,14 @@ import java.util.Optional;
 
 public class Controller {
 
+
+    @FXML
+     Button list;
+    @FXML
+    Button retr = new Button();
+    @FXML
+    Button dele;
+
     @FXML
     private void handleLoginButton(ActionEvent evt) {
         Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -85,4 +93,11 @@ public class Controller {
     private void handleListButton() {
     }
 
+    public Button getList() {
+        return list;
+    }
+
+    public void setList(Button list) {
+        this.list = list;
+    }
 }
