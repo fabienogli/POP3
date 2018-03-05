@@ -117,6 +117,51 @@ public class Controller {
 
     @FXML
     private void handleRetrieveButton(ActionEvent event) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Connexion");
+        dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
+        // Set the button types.
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField numMessage = new TextField();
+        numMessage.setPromptText("");
+
+        grid.add(new Label("Numéro du message:"), 0, 0);
+        grid.add(numMessage, 1, 0);
+
+        Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+        okButton.setDisable(true);
+        // Do some validation (using the Java 8 lambda syntax).
+        numMessage.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+// Request focus on the username field by default.
+        Platform.runLater(() -> numMessage.requestFocus());
+
+// Convert the result to a username-password-pair when the login button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                return numMessage.getText();
+            }
+            return null;
+        });
+
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(numMessageTmp -> {
+            System.out.println(result.get());
+            String reponseServer= client.retr(Integer.parseInt(result.get()));
+            this.textArea.setText(reponseServer);
+        });
 
     }
 
@@ -130,6 +175,8 @@ public class Controller {
 
     @FXML
     private void handleListButton() {
+    String reponseServer=client.list();
+    this.textArea.setText(reponseServer);
     }
 
     @FXML

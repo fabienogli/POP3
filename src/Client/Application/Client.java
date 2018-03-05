@@ -128,11 +128,27 @@ public class Client {
         String data = "";
         try {
             DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            data = fromServer.readLine();
+            //data = fromServer.readLine();
+            //data =fromServer.;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Le client recoit " + data);
         return data;
+    }
+    public String retr(int numMessage){
+        String reponseServer ="";
+        System.out.println("dans retr");
+        write("RETR " + numMessage);
+        reponseServer = read();
+        return reponseServer;
+    }
+    public String list(){
+        String reponseServer ="";
+        System.out.println("dans list");
+        write("LIST");
+        reponseServer = read();
+        return reponseServer;
     }
 }
