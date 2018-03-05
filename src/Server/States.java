@@ -25,8 +25,6 @@ public class States {
                 returnCode = "-ERR commande non autorisee";
                 break;
         }
-
-
         return returnCode;
     }
 

@@ -37,7 +37,7 @@
             </ToolBar>
          </top>
          <bottom>
-            <Label fx:id="statusLabel" prefHeight="26.0" prefWidth="555.0" text="Statut : Non connecté" BorderPane.alignment="CENTER" />
+            <Label fx:id="status" prefHeight="26.0" prefWidth="555.0" text="Statut : Non connecté" BorderPane.alignment="CENTER" />
          </bottom>
       </BorderPane>
    </children>
