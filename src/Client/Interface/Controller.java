@@ -1,5 +1,6 @@
 package Client.Interface;
 
+import Client.Application.Client;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -10,11 +11,12 @@ import javafx.util.Pair;
 
 import javafx.event.ActionEvent;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class Controller {
 
-    public Controller() {
+    public Controller() throws IOException {
     }
 
     @FXML
@@ -22,28 +24,32 @@ public class Controller {
     @FXML
     Button list;
     @FXML
-    Button retr ;
+    Button retr;
     @FXML
     Button dele;
     @FXML
     Button stat;
+    @FXML
+    TextArea textArea;
+
+    Client client ;
 
     @FXML
-    private void initialize()
-    {
+    private void initialize() throws IOException {
         list.setDisable(true);
         retr.setDisable(true);
         dele.setDisable(true);
         stat.setDisable(true);
+        client = new Client();
     }
 
     @FXML
     private void handleLoginButton(ActionEvent evt) {
-        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
-        dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
+        dialog.setHeaderText("Entrez nom d'utilisateur :");
         // Set the button types.
-        ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
+        ButtonType loginButtonType = new ButtonType("Envoyer", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
 // Create the username and password labels and fields.
@@ -54,13 +60,13 @@ public class Controller {
 
         TextField username = new TextField();
         username.setPromptText("Utilisateur");
-        PasswordField password = new PasswordField();
-        password.setPromptText("Mot de passe");
+        /*PasswordField password = new PasswordField();
+        password.setPromptText("Mot de passe");*/
 
         grid.add(new Label("login:"), 0, 0);
         grid.add(username, 1, 0);
-        grid.add(new Label("mot de passe:"), 0, 1);
-        grid.add(password, 1, 1);
+        /*grid.add(new Label("mot de passe:"), 0, 1);
+        grid.add(password, 1, 1);*/
 
 // Enable/Disable login button depending on whether a username was entered.
         Node loginButton = dialog.getDialogPane().lookupButton(loginButtonType);
@@ -79,16 +85,24 @@ public class Controller {
 // Convert the result to a username-password-pair when the login button is clicked.
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
-                return new Pair<>(username.getText(), password.getText());
+                //return new Pair<>(username.getText(), password.getText());
+                return username.getText();
             }
             return null;
         });
 
-        Optional<Pair<String, String>> result = dialog.showAndWait();
-
-        result.ifPresent(usernamePassword -> {
+        Optional<String> result = dialog.showAndWait();
+        System.out.println(result.get());
+        try {
+            String reponseServeur =client.recevoirReponseServeur("USER " + result.get());
+            System.out.println(reponseServeur);
+            textArea.setText(reponseServeur);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        /*result.ifPresent(usernamePassword -> {
             System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
-        });
+        });*/
 
     }
 
@@ -110,7 +124,7 @@ public class Controller {
     }
 
     @FXML
-    public void disableList(){
+    public void disableList() {
         list.setDisable(true);
 
     }
