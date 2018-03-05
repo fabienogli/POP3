@@ -72,6 +72,7 @@ public class Connexion implements Runnable {
         String codeRetour[] = null;
         try {
             requete = infromClient.readLine();
+            System.out.println("Server recoit" + requete);
         } catch (IOException e) {
             e.printStackTrace();
         }

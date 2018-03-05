@@ -130,7 +130,7 @@ public class Commande {
 
     public static String ready() {
         //envoi message ready
-        return "Serveur POP3 de Mark-Fabien-Florian Ready "+ generateDateStamp();
+        return "Serveur POP3 de Mark-Fabien-Florian Ready "+ generateDateStamp() + "\n";
     }
 
     public static String encryptApop(String toEncrypt) {

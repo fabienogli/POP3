@@ -17,19 +17,17 @@ public class Client {
     private Utilisateur utilisateur;
     private int port;
 
-    private StateEnum state;
-
-
     public Client() throws IOException {
         this.adresseIp = java.net.InetAddress.getByName("localhost");
         this.port = 2026;
-        this.state = StateEnum.ATTENTE_CONNEXION;
+        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
     }
 
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
-        this.state = StateEnum.ATTENTE_CONNEXION;
+        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+
     }
 
     public Client(Utilisateur utilisateur) throws IOException {
@@ -68,7 +66,6 @@ public class Client {
 
     public void start() throws IOException {
         System.out.println("Démarrage client");
-        clientSocket = new Socket(this.getAdresseIp(), this.getPort());
         String reponseServer = read();
         System.out.println(reponseServer);
         if (reponseServer.contains("Ready")) {
@@ -77,6 +74,21 @@ public class Client {
             System.out.println(reponseServer);
             write("PASS " + this.getUtilisateur().getMdp());
         }
+    }
+
+    public boolean authentification() {
+        System.out.println("dans authentification");
+        String reponseServer = read();
+        if (!reponseServer.contains("Ready")) {
+            return false;
+        } else if (this.getUtilisateur() == null) {
+            return false;
+        }
+        write("USER " + this.getUtilisateur().getNom());
+        reponseServer = read();
+        write("PASS " + this.getUtilisateur().getMdp());
+        reponseServer = read();
+        return true;
     }
 
 
