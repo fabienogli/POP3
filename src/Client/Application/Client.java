@@ -61,7 +61,8 @@ public class Client {
         //On ferme la socket du client
         clientSocket.close();
         return recu;
-
+    }
+    
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
