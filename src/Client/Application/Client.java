@@ -1,5 +1,7 @@
 package Client.Application;
 
+import Server.Utilisateur;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -8,18 +10,38 @@ public class Client {
 
     private Socket clientSocket;
     private InetAddress adresseIp;
+<<<<<<< HEAD
     private String reponse;
     private String requete;
+=======
+    private Utilisateur utilisateur;
+    private int port;
+>>>>>>> 1c12523ba0b17c561560a1a9cdd2dedf7bb0d1a0
 
     private enum requete {USER, PASS, APOP, STAT, LIST, RETR, DELE}
 
 
     public Client() throws IOException {
-
-        adresseIp = java.net.InetAddress.getByName("localhost");
-        clientSocket = new Socket(adresseIp, 2026);
+        this.adresseIp = java.net.InetAddress.getByName("localhost");
+        this.port = 2026;
     }
 
+    public Client(InetAddress adresseIp, int port) throws IOException {
+        this.adresseIp = adresseIp;
+        this.port = port;
+    }
+
+    public Client(Utilisateur utilisateur) throws IOException {
+        this();
+        this.utilisateur = utilisateur;
+    }
+
+    public Client(InetAddress adresseIp, Utilisateur utilisateur, int port) throws IOException {
+        this(adresseIp, port);
+        this.utilisateur = utilisateur;
+    }
+
+<<<<<<< HEAD
     public String recevoirReponseServeur(String requete) throws IOException {
         System.out.println("Dans réception");
         DataInputStream inFromServer;
@@ -42,6 +64,64 @@ public class Client {
         //On ferme la socket du client
         clientSocket.close();
         return recu;
+=======
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
+
+    public InetAddress getAdresseIp() {
+        return adresseIp;
+    }
+
+    public void setAdresseIp(InetAddress adresseIp) {
+        this.adresseIp = adresseIp;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void start() throws IOException {
+        System.out.println("Démarrage clien");
+        clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        String reponseServer = read();
+        System.out.println(reponseServer);
+    }
+
+
+    public void write(String data) {
+        data += "\r\n";
+        try {
+            OutputStream outputStream = this.clientSocket.getOutputStream();
+            outputStream.write(data.getBytes());
+            outputStream.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String read() throws UnsupportedEncodingException {
+        byte[] buffer = new byte[8192];
+        int count = 0;
+        try {
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(this.clientSocket.getInputStream());
+            while ((count = bufferedInputStream.read(buffer)) <= 0) {
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new String(buffer, "UTF-8");
+>>>>>>> 1c12523ba0b17c561560a1a9cdd2dedf7bb0d1a0
     }
 }
 

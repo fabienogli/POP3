@@ -1,6 +1,9 @@
 package Client.Interface;
 
 import Client.Application.Client;
+
+import Server.Utilisateur;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -11,6 +14,8 @@ import javafx.util.Pair;
 
 import javafx.event.ActionEvent;
 
+
+import javax.rmi.CORBA.Util;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -91,6 +96,7 @@ public class Controller {
             return null;
         });
 
+
         Optional<String> result = dialog.showAndWait();
         System.out.println(result.get());
         try {
@@ -103,6 +109,25 @@ public class Controller {
         /*result.ifPresent(usernamePassword -> {
             System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
         });*/
+/*
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        String _username;
+        String _password;
+        result.ifPresent(usernamePassword -> {
+                    System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+            Utilisateur utilisateur = new Utilisateur(usernamePassword.getKey());
+            utilisateur.setMdp(usernamePassword.getValue());
+            try {
+                Client client = new Client();
+                client.setUtilisateur(utilisateur);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+*/
+
+
 
     }
 
