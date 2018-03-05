@@ -135,9 +135,6 @@ public class Controller {
 
     }
 
-    public Button getList() {
-        return list;
-    }
 
     public void setList(Button list) {
         this.list = list;

@@ -6,6 +6,10 @@ import Server.Utilisateur;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Client {
 
@@ -86,6 +90,20 @@ public class Client {
             this.stateEnum = StateEnum.AUTHORIZATION;
         }
         return true;
+    }
+
+    public void createMailFile(){
+        Path file = Paths.get("src/Client/Mails/"+this.utilisateur.getNom()) ;
+        try {
+            // Create the empty file with default permissions, etc.
+            Files.createFile(file);
+        } catch (FileAlreadyExistsException x) {
+            System.err.format("file named %s" +
+                    " already exists%n", file);
+        } catch (IOException x) {
+            // Some other sort of failure, such as permissions.
+            System.err.format("createFile error: %s%n", x);
+        }
     }
 
 
