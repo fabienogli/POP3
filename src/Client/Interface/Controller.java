@@ -109,6 +109,7 @@ public class Controller {
                 retr.setDisable(false);
                 dele.setDisable(false);
                 stat.setDisable(false);
+                client.createMailFile();
             }
         });
 
