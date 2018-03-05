@@ -62,7 +62,7 @@ public class Client {
         clientSocket.close();
         return recu;
     }
-    
+
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
