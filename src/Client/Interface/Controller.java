@@ -37,6 +37,8 @@ public class Controller {
     Button stat;
     @FXML
     TextArea textArea;
+    @FXML
+    Label statusLabel;
 
     @FXML
     private void initialize() throws IOException {
@@ -101,7 +103,13 @@ public class Controller {
             Utilisateur utilisateur = new Utilisateur(usernamePassword.getKey());
             utilisateur.setMdp(usernamePassword.getValue());
             client.setUtilisateur(utilisateur);
-            client.authentification();
+            if(client.authentification()){
+                statusLabel.setText("Status : Connecté");
+                list.setDisable(false);
+                retr.setDisable(false);
+                dele.setDisable(false);
+                stat.setDisable(false);
+            }
         });
 
     }
@@ -129,11 +137,5 @@ public class Controller {
 
     }
 
-    public Button getList() {
-        return list;
-    }
 
-    public void setList(Button list) {
-        this.list = list;
-    }
 }

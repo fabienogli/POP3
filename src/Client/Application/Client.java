@@ -1,5 +1,6 @@
 package Client.Application;
 
+import Client.Interface.Controller;
 import Server.StateEnum;
 import Server.Utilisateur;
 
@@ -13,6 +14,7 @@ public class Client {
     private InetAddress adresseIp;
     private String reponse;
     private String requete;
+    private Controller uiController = new Controller();
 
     private Utilisateur utilisateur;
     private int port;
