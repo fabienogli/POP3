@@ -2,13 +2,25 @@ package Server;
 
 public class Utilisateur {
 
-    private String nom;
-    private String email;
+    private String nom="";
+    private String email="";
+    private String mdp="";
+
+    public Utilisateur(String nom) {
+        this.nom = nom;
+    }
 
     public Utilisateur(String nom, String email) {
         this.nom = nom;
         this.email = email;
     }
+
+    public Utilisateur(String nom, String email, String mdp) {
+        this.nom = nom;
+        this.email = email;
+        this.mdp = mdp;
+    }
+
 
 
     public String getNom() {
@@ -19,6 +31,13 @@ public class Utilisateur {
         this.nom = nom;
     }
 
+    public String getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
+    }
 
     public String getEmail() {
         return email;
