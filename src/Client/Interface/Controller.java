@@ -21,6 +21,7 @@ import java.util.Optional;
 public class Controller {
 
     protected Client client;
+    protected boolean connected;
 
     public Controller() {
     }
@@ -45,6 +46,7 @@ public class Controller {
 
     @FXML
     private void initialize() throws IOException {
+        connected = false;
         disableButton(true);
         client = new Client();
         client.start();
@@ -52,6 +54,13 @@ public class Controller {
 
     @FXML
     private void handleLoginButton(ActionEvent evt) {
+        if (connected) {
+            this.client.logout();
+            login.setText("Connexion");
+            connected = false;
+            return;
+        }
+
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
         dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
@@ -106,6 +115,8 @@ public class Controller {
             client.setUtilisateur(utilisateur);
             if (client.authentification()) {
                 disableButton(false);
+                login.setText("Deconnexion");
+                connected = true;
             }
             status.setText(convertStateEnumToString(client.getStatus()));
         });
