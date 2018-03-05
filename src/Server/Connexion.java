@@ -7,15 +7,10 @@ import java.net.Socket;
 
 public class Connexion implements Runnable {
 
-    private InetAddress clientAdress;
-    private int portEcoute;
     private Socket clientSocket;
-    private int clientPort = 0;
     private StateEnum currentstate = StateEnum.ATTENTE_CONNEXION;
     private String USER;
     private MessageBox mailBox;
-    private final int i_USER = 0;
-    private final int i_PASS = 1;
 
     public StateEnum getCurrentstate() {
         return this.currentstate;
@@ -27,9 +22,7 @@ public class Connexion implements Runnable {
 
 
     public Connexion(InetAddress clientAdress, Socket clientSocket, int clientPort) {
-        this.clientAdress = clientAdress;
         this.clientSocket = clientSocket;
-        this.clientPort = clientPort;
     }
 
     @Override

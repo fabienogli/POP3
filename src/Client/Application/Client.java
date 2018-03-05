@@ -11,23 +11,18 @@ public class Client {
 
     private Socket clientSocket;
     private InetAddress adresseIp;
-    private String reponse;
-    private String requete;
-
     private Utilisateur utilisateur;
     private int port;
-
-    public Client() throws IOException {
-        this.adresseIp = java.net.InetAddress.getByName("localhost");
-        this.port = 2026;
-        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
-    }
+    private StateEnum stateEnum= null;
 
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
         this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+    }
 
+    public Client() throws IOException {
+        this(java.net.InetAddress.getByName("localhost"), 2026);
     }
 
     public Client(Utilisateur utilisateur) throws IOException {
@@ -67,27 +62,29 @@ public class Client {
     public void start() throws IOException {
         System.out.println("Démarrage client");
         String reponseServer = read();
-        System.out.println(reponseServer);
         if (reponseServer.contains("Ready")) {
-            write("USER " + this.getUtilisateur().getNom());
-            reponseServer = read();
-            System.out.println(reponseServer);
-            write("PASS " + this.getUtilisateur().getMdp());
+            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
         }
     }
 
     public boolean authentification() {
-        System.out.println("dans authentification");
-        String reponseServer = read();
-        if (!reponseServer.contains("Ready")) {
+        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
             return false;
-        } else if (this.getUtilisateur() == null) {
+        }
+        System.out.println("dans authentification");
+        if (this.getUtilisateur() == null) {
             return false;
         }
         write("USER " + this.getUtilisateur().getNom());
-        reponseServer = read();
+        String reponseServer = read();
+        if (reponseServer.contains("-ERR")) {
+            return false;
+        }
         write("PASS " + this.getUtilisateur().getMdp());
         reponseServer = read();
+        if (reponseServer.contains("+OK")) {
+            this.stateEnum = StateEnum.AUTHORIZATION;
+        }
         return true;
     }
 
@@ -114,5 +111,29 @@ public class Client {
         }
         System.out.println("Le client recoit " + data);
         return data;
+    }
+
+    public void list() {
+        write("LIST");
+    }
+
+    public void stat() {
+        write("STAT");
+    }
+
+    public void retr(int i_message) {
+        write("RETR" + i_message);
+    }
+
+    public void del(int i_message) {
+        write("DELE" + i_message);
+    }
+
+    public StateEnum getStatus() {
+        return this.stateEnum;
+    }
+
+    public void logout() {
+        write("QUIT");
     }
 }

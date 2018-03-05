@@ -2,6 +2,7 @@ package Client.Interface;
 
 import Client.Application.Client;
 
+import Server.StateEnum;
 import Server.Utilisateur;
 
 import javafx.application.Platform;
@@ -14,7 +15,6 @@ import javafx.util.Pair;
 
 import javafx.event.ActionEvent;
 
-import javax.rmi.CORBA.Util;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -37,14 +37,17 @@ public class Controller {
     Button stat;
     @FXML
     TextArea textArea;
+    @FXML
+    Label status;
+
+
+
 
     @FXML
     private void initialize() throws IOException {
-        list.setDisable(true);
-        retr.setDisable(true);
-        dele.setDisable(true);
-        stat.setDisable(true);
+        disableButton(true);
         client = new Client();
+        client.start();
     }
 
     @FXML
@@ -101,7 +104,10 @@ public class Controller {
             Utilisateur utilisateur = new Utilisateur(usernamePassword.getKey());
             utilisateur.setMdp(usernamePassword.getValue());
             client.setUtilisateur(utilisateur);
-            client.authentification();
+            if (client.authentification()) {
+                disableButton(false);
+            }
+            status.setText(convertStateEnumToString(client.getStatus()));
         });
 
     }
@@ -135,5 +141,35 @@ public class Controller {
 
     public void setList(Button list) {
         this.list = list;
+    }
+
+    public static String convertStateEnumToString(StateEnum stateEnum) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Status: ");
+        switch (stateEnum) {
+            case ATTENTE_CONNEXION:
+                stringBuilder.append("Déconnecté");
+                break;
+            case AUTHORIZATION:
+                stringBuilder.append("Authentification");
+                break;
+            case AUTHENTIFICATION:
+                stringBuilder.append("Authentification");
+                break;
+            case TRANSACTION:
+                stringBuilder.append("Connecté");
+                break;
+            default:
+                stringBuilder.append("Serveur inactif");
+                break;
+        }
+        return stringBuilder.toString();
+    }
+
+    protected void disableButton(boolean bool) {
+        list.setDisable(bool);
+        retr.setDisable(bool);
+        dele.setDisable(bool);
+        stat.setDisable(bool);
     }
 }
