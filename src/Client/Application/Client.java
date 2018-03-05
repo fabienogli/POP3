@@ -1,5 +1,6 @@
 package Client.Application;
 
+import Server.StateEnum;
 import Server.Utilisateur;
 
 import java.io.*;
@@ -16,17 +17,19 @@ public class Client {
     private Utilisateur utilisateur;
     private int port;
 
-    private enum requete {USER, PASS, APOP, STAT, LIST, RETR, DELE}
+    private StateEnum state;
 
 
     public Client() throws IOException {
         this.adresseIp = java.net.InetAddress.getByName("localhost");
         this.port = 2026;
+        this.state = StateEnum.ATTENTE_CONNEXION;
     }
 
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
+        this.state = StateEnum.ATTENTE_CONNEXION;
     }
 
     public Client(Utilisateur utilisateur) throws IOException {
@@ -37,30 +40,6 @@ public class Client {
     public Client(InetAddress adresseIp, Utilisateur utilisateur, int port) throws IOException {
         this(adresseIp, port);
         this.utilisateur = utilisateur;
-    }
-
-    public String recevoirReponseServeur(String requete) throws IOException {
-        System.out.println("Dans réception");
-        DataInputStream inFromServer;
-        DataOutputStream outToServer;
-
-        //Ouverture des flux
-        inFromServer = new DataInputStream(clientSocket.getInputStream());
-        outToServer = new DataOutputStream(clientSocket.getOutputStream());
-
-
-        //Envoi requete au serveur
-        outToServer.writeBytes(requete);
-        outToServer.flush();
-
-        //Determination de l'header
-        String recu = inFromServer.readLine();
-        //System.out.println(recu);
-        String[] tmp_header = recu.split("SEPARATEUR");
-
-        //On ferme la socket du client
-        clientSocket.close();
-        return recu;
     }
     
     public Utilisateur getUtilisateur() {
