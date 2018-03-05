@@ -61,10 +61,16 @@ public class Client {
     }
 
     public void start() throws IOException {
-        System.out.println("Démarrage clien");
+        System.out.println("Démarrage client");
         clientSocket = new Socket(this.getAdresseIp(), this.getPort());
         String reponseServer = read();
         System.out.println(reponseServer);
+        if (reponseServer.contains("Ready")) {
+            write("USER " + this.getUtilisateur().getNom());
+            reponseServer = read();
+            System.out.println(reponseServer);
+            write("PASS " + this.getUtilisateur().getMdp());
+        }
     }
 
 
@@ -77,20 +83,18 @@ public class Client {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Le client envoie " + data);
     }
 
-    public String read() throws UnsupportedEncodingException {
-        byte[] buffer = new byte[8192];
-        int count = 0;
+    public String read(){
+        String data = "";
         try {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(this.clientSocket.getInputStream());
-            while ((count = bufferedInputStream.read(buffer)) <= 0) {
-
-            }
-        } catch (Exception e) {
+            DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
+            data = fromServer.readLine();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return new String(buffer, "UTF-8");
+        System.out.println("Le client recoit " + data);
+        return data;
     }
 }
