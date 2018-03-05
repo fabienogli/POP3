@@ -10,13 +10,11 @@ public class Client {
 
     private Socket clientSocket;
     private InetAddress adresseIp;
-<<<<<<< HEAD
     private String reponse;
     private String requete;
-=======
+
     private Utilisateur utilisateur;
     private int port;
->>>>>>> 1c12523ba0b17c561560a1a9cdd2dedf7bb0d1a0
 
     private enum requete {USER, PASS, APOP, STAT, LIST, RETR, DELE}
 
@@ -41,7 +39,6 @@ public class Client {
         this.utilisateur = utilisateur;
     }
 
-<<<<<<< HEAD
     public String recevoirReponseServeur(String requete) throws IOException {
         System.out.println("Dans réception");
         DataInputStream inFromServer;
@@ -64,7 +61,7 @@ public class Client {
         //On ferme la socket du client
         clientSocket.close();
         return recu;
-=======
+
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
@@ -121,7 +118,7 @@ public class Client {
         }
 
         return new String(buffer, "UTF-8");
->>>>>>> 1c12523ba0b17c561560a1a9cdd2dedf7bb0d1a0
+
     }
 }
 
