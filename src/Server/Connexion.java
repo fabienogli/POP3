@@ -92,7 +92,8 @@ public class Connexion implements Runnable {
         System.out.println(this.currentstate);
 
         try {
-            outToClient.writeBytes(result);
+            System.out.println("Server envoie" + result);
+            outToClient.writeBytes(result + "\n");
             outToClient.flush();
             //outToClient.close();
         } catch (IOException e) {
