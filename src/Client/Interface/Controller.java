@@ -1,7 +1,9 @@
 package Client.Interface;
 
 import Client.Application.Client;
+
 import Server.Utilisateur;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 public class Controller {
 
+    protected Client client;
+
     public Controller() {
     }
 
@@ -31,14 +35,18 @@ public class Controller {
     Button dele;
     @FXML
     Button stat;
+    @FXML
+    TextArea textArea;
+    @FXML
+    Label statusLabel;
 
     @FXML
-    private void initialize()
-    {
+    private void initialize() throws IOException {
         list.setDisable(true);
         retr.setDisable(true);
         dele.setDisable(true);
         stat.setDisable(true);
+        client = new Client();
     }
 
     @FXML
@@ -90,21 +98,19 @@ public class Controller {
 
         Optional<Pair<String, String>> result = dialog.showAndWait();
 
-        String _username;
-        String _password;
         result.ifPresent(usernamePassword -> {
-                    System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
+            System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getValue());
             Utilisateur utilisateur = new Utilisateur(usernamePassword.getKey());
             utilisateur.setMdp(usernamePassword.getValue());
-            try {
-                Client client = new Client();
-                client.setUtilisateur(utilisateur);
-            } catch (IOException e) {
-                e.printStackTrace();
+            client.setUtilisateur(utilisateur);
+            if(client.authentification()){
+                statusLabel.setText("Status : Connecté");
+                list.setDisable(false);
+                retr.setDisable(false);
+                dele.setDisable(false);
+                stat.setDisable(false);
             }
         });
-
-
 
     }
 
@@ -126,16 +132,10 @@ public class Controller {
     }
 
     @FXML
-    public void disableList(){
+    public void disableList() {
         list.setDisable(true);
 
     }
 
-    public Button getList() {
-        return list;
-    }
 
-    public void setList(Button list) {
-        this.list = list;
-    }
 }

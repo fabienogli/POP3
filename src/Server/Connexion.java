@@ -72,6 +72,7 @@ public class Connexion implements Runnable {
         String codeRetour[] = null;
         try {
             requete = infromClient.readLine();
+            System.out.println("Server recoit" + requete);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,7 +93,8 @@ public class Connexion implements Runnable {
         System.out.println(this.currentstate);
 
         try {
-            outToClient.writeBytes(result);
+            System.out.println("Server envoie" + result);
+            outToClient.writeBytes(result + "\n");
             outToClient.flush();
             //outToClient.close();
         } catch (IOException e) {
