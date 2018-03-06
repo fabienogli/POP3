@@ -11,7 +11,6 @@ public class testClient {
         utilisateur.setMdp("doe");
         try {
             Client client = new Client();
-            client.start();
             client.setUtilisateur(utilisateur);
             client.authentification();
         } catch (IOException e) {
