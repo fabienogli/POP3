@@ -205,13 +205,13 @@ public class Controller {
 
     public static String convertStateEnumToString(StateEnum stateEnum) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Status : ");
+        stringBuilder.append("Status: ");
         switch (stateEnum) {
             case ATTENTE_CONNEXION:
                 stringBuilder.append("Déconnecté");
                 break;
             case AUTHORIZATION:
-                stringBuilder.append("Connecté");
+                stringBuilder.append("Authentification");
                 break;
             case AUTHENTIFICATION:
                 stringBuilder.append("Authentification");
