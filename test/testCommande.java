@@ -74,17 +74,6 @@ public class testCommande extends Commande {
         System.out.println("c4c9334bac560ecc979e58001b3e22fb".equals(Commande.encryptApop("<1896.697170952@dbc.mtview.ca.us>tanstaaf")));
     }
 
-    private static void testApop() {
-        System.out.println("Doit être vrai\n");
-        System.out.println(Commande.isApopValid(Commande.encryptApop("strength"), "foo"));
-        System.out.println(Commande.isApopValid(Commande.encryptApop("will"), "root"));
-        System.out.println(Commande.isApopValid(Commande.encryptApop("begood"), "john"));
-        System.out.println("Doit être faux\n");
-        System.out.println(Commande.isApopValid(Commande.encryptApop("will"), "foo"));
-        System.out.println(Commande.isApopValid(Commande.encryptApop("begood"), "root"));
-        System.out.println(Commande.isApopValid(Commande.encryptApop("strength"), "john"));
-    }
-
     protected static void testAddMail() {
         addMail("john");
     }
@@ -93,7 +82,6 @@ public class testCommande extends Commande {
 //        testPass();
 //        testUser();
 //        testEncyptApop();
-//        testApop();
         testAddMail();
     }
 }
