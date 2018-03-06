@@ -21,7 +21,7 @@ public class Connexion implements Runnable {
     }
 
 
-    public Connexion(InetAddress clientAdress, Socket clientSocket, int clientPort) {
+    public Connexion(Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
 
@@ -62,7 +62,6 @@ public class Connexion implements Runnable {
 
         String requete = "";
         String result = "";
-        String codeRetour[] = null;
         try {
             requete = infromClient.readLine();
             System.out.println("Server recoit" + requete);

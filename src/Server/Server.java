@@ -1,5 +1,11 @@
 package Server;
 
+import javax.net.ServerSocketFactory;
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.*;
 
@@ -11,7 +17,8 @@ public class Server {
     public Server(){
         portEcoute = 2026;
         try {
-            serverSocket = new ServerSocket(portEcoute);
+            ServerSocketFactory fabrique =  SSLServerSocketFactory.getDefault();
+            serverSocket = fabrique.createServerSocket(portEcoute);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -27,7 +34,7 @@ public class Server {
                 DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
                 int portClient = receivePacket.getPort();
                 InetAddress address = receivePacket.getAddress();
-                Connexion serveurHTTP = new Connexion(address,clientSocket, portClient);
+                Connexion serveurHTTP = new Connexion(clientSocket);
                 Thread thread = new Thread(serveurHTTP);
                 System.out.println("Lancement du serveur");
                 thread.start();
