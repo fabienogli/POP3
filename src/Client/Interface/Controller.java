@@ -42,15 +42,13 @@ public class Controller {
     @FXML
     Label status;
 
-
-
-
     @FXML
     private void initialize() throws IOException {
         connected = false;
         disableButton(true);
-        client = new Client();
-        client.start();
+        String s =client.start();
+        textArea.setText(s);
+        System.out.println("bienvenue : "+s);
     }
 
     @FXML

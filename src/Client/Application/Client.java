@@ -1,5 +1,6 @@
 package Client.Application;
 
+import Server.Commande;
 import Server.StateEnum;
 import Server.Utilisateur;
 
@@ -17,12 +18,20 @@ public class Client {
     private InetAddress adresseIp;
     private Utilisateur utilisateur;
     private int port;
+
     private StateEnum stateEnum= null;
+    private String timestamp;
 
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
         this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        String reponseServer = read();
+        String[] str = reponseServer.split("Ready ");
+        if (str.length == 2) {
+            timestamp = str[1];
+            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
+        }
     }
 
     public Client() throws IOException {
@@ -38,7 +47,7 @@ public class Client {
         this(adresseIp, port);
         this.utilisateur = utilisateur;
     }
-    
+
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
@@ -63,12 +72,13 @@ public class Client {
         this.port = port;
     }
 
-    public void start() throws IOException {
+    public String start() throws IOException {
         System.out.println("Démarrage client");
         String reponseServer = read();
-        if (reponseServer.contains("Ready")) {
+        //if (reponseServer.contains("Ready")) {
             this.stateEnum = StateEnum.ATTENTE_CONNEXION;
-        }
+        //}
+        return reponseServer;
     }
 
     public boolean authentification() {
@@ -86,6 +96,22 @@ public class Client {
         }
         write("PASS " + this.getUtilisateur().getMdp());
         reponseServer = read();
+        if (reponseServer.contains("+OK")) {
+            this.stateEnum = StateEnum.AUTHORIZATION;
+        }
+        return true;
+    }
+
+    public boolean authentificationApop() {
+        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
+            return false;
+        }
+        System.out.println("dans authentification APOP");
+        if (this.getUtilisateur() == null) {
+            return false;
+        }
+        write("APOP " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
+        String reponseServer = read();
         if (reponseServer.contains("+OK")) {
             this.stateEnum = StateEnum.AUTHORIZATION;
         }
@@ -119,25 +145,29 @@ public class Client {
         System.out.println("Le client envoie " + data);
     }
 
-    public String read(){
+    public String read() {
         String data = "";
         try {
             DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            data = fromServer.readLine();
-
+            while ((fromServer.available()) != 0) {
+                data += fromServer.readLine()+"\n" ;
+                System.out.println("recu :"+data);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Le client recoit " + data);
         return data;
     }
-    public String retr(int numMessage){
-        String reponseServer ="";
+
+    public String retr(int numMessage) {
+        String reponseServer = "";
         System.out.println("dans retr");
         write("RETR " + numMessage);
         reponseServer = read();
         return reponseServer;
     }
+
     public String list() {
         String reponseServer = "";
         System.out.println("dans list");
@@ -149,7 +179,6 @@ public class Client {
     public void stat() {
         write("STAT");
     }
-
 
 
     public void del(int i_message) {
