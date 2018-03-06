@@ -210,7 +210,7 @@ public class Controller {
                 stringBuilder.append("Déconnecté");
                 break;
             case AUTHORIZATION:
-                stringBuilder.append("Authentification");
+                stringBuilder.append("Connecté");
                 break;
             case AUTHENTIFICATION:
                 stringBuilder.append("Authentification");
