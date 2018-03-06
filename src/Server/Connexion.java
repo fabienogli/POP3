@@ -11,6 +11,7 @@ public class Connexion implements Runnable {
     private StateEnum currentstate = StateEnum.ATTENTE_CONNEXION;
     private String USER;
     private MessageBox mailBox;
+    private String timestamp;
 
     public StateEnum getCurrentstate() {
         return this.currentstate;
@@ -20,6 +21,9 @@ public class Connexion implements Runnable {
         this.currentstate = currentstate;
     }
 
+    public Connexion() {
+
+    }
 
     public Connexion(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -35,6 +39,7 @@ public class Connexion implements Runnable {
         while (true) {
             if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)) {
                 String result = States.attenteConnexion(this);
+                saveTimestamp(result);
                 try {
                     outToClient = new DataOutputStream(clientSocket.getOutputStream());
                     outToClient.writeBytes(result);
@@ -56,6 +61,10 @@ public class Connexion implements Runnable {
 
             }
         }
+    }
+
+    private void saveTimestamp(String result) {
+        this.timestamp = result.split(" ")[1];
     }
 
     private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient) {
@@ -86,8 +95,20 @@ public class Connexion implements Runnable {
 
         try {
             System.out.println("Server envoie" + result);
-            outToClient.writeBytes(result + "\n");
+            //test/////////////
+            String[] resultTable=result.split("\n");
+            if(resultTable.length>0){
+                for(int i=0;i<resultTable.length;i++){
+                    outToClient.writeBytes(resultTable[i] + "\n");
+                }
+            }else{
+                outToClient.writeBytes(result + "\n");
+            }
             outToClient.flush();
+            //fin test//////////
+            /*
+            outToClient.writeBytes(result + "\n");
+            outToClient.flush();*/
             //outToClient.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,5 +130,9 @@ public class Connexion implements Runnable {
 
     public void setMailBox(MessageBox mailBox) {
         this.mailBox = mailBox;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 }

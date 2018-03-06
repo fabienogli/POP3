@@ -34,8 +34,8 @@ public class Server {
                 DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
                 int portClient = receivePacket.getPort();
                 InetAddress address = receivePacket.getAddress();
-                Connexion serveurHTTP = new Connexion(clientSocket);
-                Thread thread = new Thread(serveurHTTP);
+                Connexion serveurPOP3 = new Connexion(clientSocket);
+                Thread thread = new Thread(serveurPOP3);
                 System.out.println("Lancement du serveur");
                 thread.start();
             }

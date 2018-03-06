@@ -12,9 +12,8 @@ import java.util.*;
 public class Commande {
 
     protected static final int i_USER = 0;
-    protected static final int i_PASS = 1;
-    protected static final int i_ADRESSE = 2;
     private static String cheminDatabase = "src/database/";
+    private static String timestamp;
 
     public static String quit(Connexion connexion) {
         String result = "+OK Serveur POP3 de Mark-Florian-Fabien signing off";
@@ -46,12 +45,6 @@ public class Commande {
             connexion.setMailBox(addMail(connexion.getUSER()));
             result = "+OK Authentification reussie";
         }
-
-        return result;
-    }
-
-    public static String apop() {
-        String result = "-ERR";
 
         return result;
     }
@@ -146,7 +139,8 @@ public class Commande {
         return encryptMd5.toString();
     }
 
-    public static boolean isApopValid(String APOP, String USER) {
+    public static boolean isApopValid(String APOP, Connexion connexion) {
+        String USER = connexion.getUSER();
         if (USER == null || APOP == null) {
             return false;
         }
@@ -159,7 +153,7 @@ public class Commande {
                 if (i > 1) {
                     String[] tabChaine = chaine.split(",");
                     for (int x = 0; x < tabChaine.length; x++) {
-                        if (x == i_USER && USER.equals(tabChaine[x]) && encryptApop(tabChaine[x + 2]).equals(APOP)) {
+                        if (x == i_USER && USER.equals(tabChaine[x]) && encryptApop(connexion.getTimestamp() + tabChaine[x + 1]).equals(APOP)) {
                             return true;
                         } else if (x == i_USER && USER.equals(tabChaine[x])) { //Le user est bien là mais le mot de passe ne correspond pas
                             return false;
