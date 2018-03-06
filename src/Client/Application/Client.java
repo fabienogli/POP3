@@ -152,10 +152,13 @@ public class Client {
     }
 
     public String read() {
+        return read(false);
+    }
+
+    public String read(boolean stopOnlyWhenDot) {
         String data = "";
         int i = 0;
         try {
-
             //DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
             /*PushbackInputStream pbi = new PushbackInputStream(fromServer);
             while ((i=pbi.read()) != -1) {
@@ -166,7 +169,7 @@ public class Client {
             BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
             do {
                 data += fromServer.readLine() + "\n";
-            } while (fromServer.ready());
+            } while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
         } catch (IOException e) {
             e.printStackTrace();
         }
