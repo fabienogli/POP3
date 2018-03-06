@@ -30,14 +30,7 @@ public class Client {
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
-        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
-        String reponseServer = read();
-        System.out.println("Dans constructeur"+reponseServer);
-        String[] str = reponseServer.split("Ready ");
-        if (str.length == 2) {
-            timestamp = str[1];
-            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
-        }
+
     }
 
     public Client() throws IOException {
@@ -80,9 +73,16 @@ public class Client {
 
     public String start() throws IOException {
         System.out.println("Démarrage client");
-        String reponseServer ="";//= read();
-        //if (reponseServer.contains("Ready")) {
+        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        String reponseServer = read();
+        System.out.println("Dans start"+reponseServer);
+        String[] str = reponseServer.split("Ready ");
+        if (str.length == 2) {
+            timestamp = str[1];
             this.stateEnum = StateEnum.ATTENTE_CONNEXION;
+        }
+        //if (reponseServer.contains("Ready")) {
+         //   this.stateEnum = StateEnum.ATTENTE_CONNEXION;
         //}
         return reponseServer;
     }
@@ -167,6 +167,7 @@ public class Client {
             do {
                 data += fromServer.readLine() + "\n";
             } while (fromServer.ready());
+            System.out.println("recu :"+data);
         } catch (IOException e) {
             e.printStackTrace();
         }
