@@ -2,12 +2,14 @@ package Client.Interface;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.WindowEvent;
 
 import java.awt.*;
 import java.io.IOException;
@@ -23,9 +25,16 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Client POP3");
-
-        Parent root = FXMLLoader.load(getClass().getResource("vueClient.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("vueClient.fxml"));
+        Parent root = loader.load();
+        Controller controller = loader.getController();
         this.primaryStage.setScene(new Scene(root, 560, 390));
+        this.primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                controller.close();
+            }
+        });
         this.primaryStage.show();
 
 
