@@ -14,6 +14,7 @@ public class testClient {
             client.setUtilisateur(utilisateur);
             client.authentification();
             client.list();
+            client.logout();
         } catch (IOException e) {
             e.printStackTrace();
         }
