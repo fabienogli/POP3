@@ -49,12 +49,6 @@ public class Commande {
         return result;
     }
 
-    public static String apop() {
-        String result = "-ERR";
-
-        return result;
-    }
-
     public static String list(Connexion connexion) {
         StringBuilder result = new StringBuilder();
         if (connexion.getMailBox().getNumberMessages() == 0) {

@@ -1,5 +1,6 @@
 package Client.Application;
 
+import Server.Commande;
 import Server.StateEnum;
 import Server.Utilisateur;
 
@@ -18,11 +19,18 @@ public class Client {
     private Utilisateur utilisateur;
     private int port;
     private StateEnum stateEnum= null;
+    private String timestamp;
 
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
         this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        String reponseServer = read();
+        String[] str = reponseServer.split("Ready ");
+        if (str.length == 2) {
+            timestamp = str[1];
+            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
+        }
     }
 
     public Client() throws IOException {
@@ -63,14 +71,6 @@ public class Client {
         this.port = port;
     }
 
-    public void start() throws IOException {
-        System.out.println("Démarrage client");
-        String reponseServer = read();
-        if (reponseServer.contains("Ready")) {
-            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
-        }
-    }
-
     public boolean authentification() {
         if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
             return false;
@@ -86,6 +86,22 @@ public class Client {
         }
         write("PASS " + this.getUtilisateur().getMdp());
         reponseServer = read();
+        if (reponseServer.contains("+OK")) {
+            this.stateEnum = StateEnum.AUTHORIZATION;
+        }
+        return true;
+    }
+
+    public boolean authentificationApop() {
+        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
+            return false;
+        }
+        System.out.println("dans authentification APOP");
+        if (this.getUtilisateur() == null) {
+            return false;
+        }
+        write("APOP " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
+        String reponseServer = read();
         if (reponseServer.contains("+OK")) {
             this.stateEnum = StateEnum.AUTHORIZATION;
         }

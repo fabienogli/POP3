@@ -49,7 +49,6 @@ public class Controller {
         connected = false;
         disableButton(true);
         client = new Client();
-        client.start();
     }
 
     @FXML
