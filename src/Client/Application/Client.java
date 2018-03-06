@@ -123,8 +123,7 @@ public class Client {
         String data = "";
         try {
             DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            //data = fromServer.readLine();
-            //data =fromServer.;
+            data = fromServer.readLine();
 
         } catch (IOException e) {
             e.printStackTrace();

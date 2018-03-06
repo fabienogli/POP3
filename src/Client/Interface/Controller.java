@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Controller {
 
@@ -63,7 +64,7 @@ public class Controller {
 
         Dialog<Pair<String, String>> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
-        dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
+        dialog.setHeaderText("Entrez un nom d'utilisateur et un mot de passe :");
         // Set the button types.
         ButtonType loginButtonType = new ButtonType("Login", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
@@ -90,7 +91,12 @@ public class Controller {
 
 // Do some validation (using the Java 8 lambda syntax).
         username.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable(newValue.trim().isEmpty());
+            loginButton.setDisable(username.getLength() == 0 || password.getLength() == 0);
+
+        });
+
+        password.textProperty().addListener((observable, oldValue, newValue) -> {
+            loginButton.setDisable( username.getLength() == 0 || password.getLength() == 0);
         });
 
         dialog.getDialogPane().setContent(grid);
