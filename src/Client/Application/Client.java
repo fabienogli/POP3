@@ -7,10 +7,15 @@ import Server.Utilisateur;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketOption;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Set;
 
 public class Client {
 
@@ -27,6 +32,7 @@ public class Client {
         this.port = port;
         this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
         String reponseServer = read();
+        System.out.println("Dans constructeur"+reponseServer);
         String[] str = reponseServer.split("Ready ");
         if (str.length == 2) {
             timestamp = str[1];
@@ -74,7 +80,7 @@ public class Client {
 
     public String start() throws IOException {
         System.out.println("Démarrage client");
-        String reponseServer = read();
+        String reponseServer ="";//= read();
         //if (reponseServer.contains("Ready")) {
             this.stateEnum = StateEnum.ATTENTE_CONNEXION;
         //}
@@ -147,15 +153,19 @@ public class Client {
 
     public String read() {
         String data = "";
+        int i = 0;
         try {
             DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            while ((fromServer.available()) != 0) {
+            /*PushbackInputStream pbi = new PushbackInputStream(fromServer);
+            while ((i=pbi.read()) != -1) {
+                pbi.unread(i);
                 data += fromServer.readLine()+"\n" ;
                 System.out.println("recu :"+data);
-            }
+            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("i="+i);
         System.out.println("Le client recoit " + data);
         return data;
     }
