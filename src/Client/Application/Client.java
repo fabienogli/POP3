@@ -155,17 +155,21 @@ public class Client {
         String data = "";
         int i = 0;
         try {
-            DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
+
+            //DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
             /*PushbackInputStream pbi = new PushbackInputStream(fromServer);
             while ((i=pbi.read()) != -1) {
                 pbi.unread(i);
                 data += fromServer.readLine()+"\n" ;
                 System.out.println("recu :"+data);
             }*/
+            BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+            do {
+                data += fromServer.readLine() + "\n";
+            } while (fromServer.ready());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("i="+i);
         System.out.println("Le client recoit " + data);
         return data;
     }

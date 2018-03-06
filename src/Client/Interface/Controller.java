@@ -49,7 +49,6 @@ public class Controller {
         client=new Client();
         String s =client.start();
         textArea.setText(s);
-        System.out.println("bienvenue : "+s);
     }
 
     @FXML
