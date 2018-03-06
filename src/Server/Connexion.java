@@ -11,6 +11,7 @@ public class Connexion implements Runnable {
     private StateEnum currentstate = StateEnum.ATTENTE_CONNEXION;
     private String USER;
     private MessageBox mailBox;
+    private String timestamp;
 
     public StateEnum getCurrentstate() {
         return this.currentstate;
@@ -20,6 +21,9 @@ public class Connexion implements Runnable {
         this.currentstate = currentstate;
     }
 
+    public Connexion() {
+
+    }
 
     public Connexion(InetAddress clientAdress, Socket clientSocket, int clientPort) {
         this.clientSocket = clientSocket;
@@ -35,6 +39,7 @@ public class Connexion implements Runnable {
         while (true) {
             if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)) {
                 String result = States.attenteConnexion(this);
+                saveTimestamp(result);
                 try {
                     outToClient = new DataOutputStream(clientSocket.getOutputStream());
                     outToClient.writeBytes(result);
@@ -56,6 +61,10 @@ public class Connexion implements Runnable {
 
             }
         }
+    }
+
+    private void saveTimestamp(String result) {
+        this.timestamp = result.split(" ")[1];
     }
 
     private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient) {
@@ -122,5 +131,9 @@ public class Connexion implements Runnable {
 
     public void setMailBox(MessageBox mailBox) {
         this.mailBox = mailBox;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 }

@@ -45,7 +45,6 @@ public class Controller {
     private void initialize() throws IOException {
         connected = false;
         disableButton(true);
-        client = new Client();
         String s =client.start();
         textArea.setText(s);
         System.out.println("bienvenue : "+s);
