@@ -152,6 +152,10 @@ public class Client {
     }
 
     public String read() {
+        return read(false);
+    }
+
+    public String read(boolean stopOnlyWhenDot) {
         String data = "";
         int i = 0;
         try {
@@ -165,7 +169,7 @@ public class Client {
             BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
             do {
                 data += fromServer.readLine() + "\n";
-            } while (fromServer.ready());
+            } while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
         } catch (IOException e) {
             e.printStackTrace();
         }
