@@ -64,5 +64,5 @@ public class Main extends Application {
 
 
 
-    private ObservableList<> objetADefinir = FXCollections.observableArrayList();
+   // private ObservableList<> objetADefinir = FXCollections.observableArrayList();
 }
