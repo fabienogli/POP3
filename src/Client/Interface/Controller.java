@@ -172,6 +172,7 @@ public class Controller {
         result.ifPresent(numMessageTmp -> {
             System.out.println(result.get());
             String reponseServer= client.retr(Integer.parseInt(result.get()));
+            System.out.println(reponseServer);
             this.textArea.setText(reponseServer);
         });
 

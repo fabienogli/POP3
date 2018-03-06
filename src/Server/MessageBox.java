@@ -72,7 +72,7 @@ public class MessageBox {
         for (Message Message : Messages) {
             i++;
             if(!Message.isDeleteMark())
-                list += "\r\n" + i + " " + Message.size();
+                list += "\n" + i + " " + Message.size();
         }
         return list;
     }

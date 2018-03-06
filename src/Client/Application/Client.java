@@ -151,12 +151,12 @@ public class Client {
         System.out.println("Le client envoie " + data);
     }
 
-    public String read() {
+   /* public String read() {
         return read(false);
-    }
+    }*/
 
-    public String read(boolean stopOnlyWhenDot) {
-        String data = "";
+    public String read() {
+        StringBuilder data = new StringBuilder();
         int i = 0;
         try {
             //DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
@@ -168,13 +168,14 @@ public class Client {
             }*/
             BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
             do {
-                data += fromServer.readLine() + "\n";
-            } while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
+                data.append(fromServer.readLine()).append("\n");
+            } while (fromServer.ready() );
+            //while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Le client recoit " + data);
-        return data;
+        System.out.println("Le client recoit " + data.toString());
+        return data.toString();
     }
 
     public String retr(int numMessage) {

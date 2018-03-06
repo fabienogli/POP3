@@ -114,7 +114,7 @@ public class Commande {
                 return "-ERR message " + num + " is deleted";
             }
             System.out.print("RETR succes");
-            mailSb.append("+OK " + mail.size() + " octets").append("\r\n").append(mail.toString());
+            mailSb.append("+OK " + mail.size() + " octets").append("\n").append(mail.toString());
         }
         System.out.println(mailSb.toString());
         return mailSb.toString();
