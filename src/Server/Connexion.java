@@ -36,7 +36,8 @@ public class Connexion implements Runnable {
         DataOutputStream outToClient;
         //Dans le run de serveur
         System.out.println(this.currentstate);
-        while (true) {
+        boolean resultCommand = true;
+        while (resultCommand) {
             if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)) {
                 String result = States.attenteConnexion(this);
                 saveTimestamp(result);
@@ -54,7 +55,7 @@ public class Connexion implements Runnable {
                 try {
                     inFromClient = new DataInputStream(clientSocket.getInputStream());
                     outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                    this.traiterCommande(inFromClient, outToClient);
+                    resultCommand = this.traiterCommande(inFromClient, outToClient);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -67,7 +68,7 @@ public class Connexion implements Runnable {
         this.timestamp = result.split(" ")[1];
     }
 
-    private void traiterCommande(DataInputStream infromClient, DataOutputStream outToClient) {
+    private boolean traiterCommande(DataInputStream infromClient, DataOutputStream outToClient) {
 
         String requete = "";
         String result = "";
@@ -78,6 +79,16 @@ public class Connexion implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (requete.contains("QUIT")) {
+            try {
+                outToClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
         switch (getCurrentstate()) {
             case AUTHENTIFICATION:
                 result = States.authentification(requete, this);
@@ -114,6 +125,7 @@ public class Connexion implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
     }
 
 

@@ -6,11 +6,13 @@ import Server.StateEnum;
 import Server.Utilisateur;
 
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 
 import javafx.event.ActionEvent;
@@ -231,5 +233,9 @@ public class Controller {
         retr.setDisable(bool);
         dele.setDisable(bool);
         stat.setDisable(bool);
+    }
+
+    public void close() {
+        this.client.logout();
     }
 }
