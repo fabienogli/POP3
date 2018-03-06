@@ -2,7 +2,6 @@ package Server;
 
 import java.io.*;
 import java.math.BigInteger;
-import java.net.HttpRetryException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -182,7 +181,6 @@ public class Commande {
         if (USER == null) {
             return false;
         }
-
         try {
             FileReader fileReader = new FileReader(cheminDatabase + "users.csv");
             BufferedReader db = new BufferedReader(fileReader);

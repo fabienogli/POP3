@@ -30,14 +30,14 @@
               <items>
                 <Button id="login" fx:id="login" mnemonicParsing="false" onAction="#handleLoginButton" text="Se connecter" />
                   <Button fx:id="list" mnemonicParsing="false" onAction="#handleListButton" text="Lister Messages" />
-                  <Button fx:id="retr" mnemonicParsing="false" text="Recupérer Message" />
+                  <Button fx:id="retr" mnemonicParsing="false" onAction="#handleRetrieveButton" text="Recupérer Message" />
                   <Button fx:id="dele" mnemonicParsing="false" text="Supprimer Message" />
                   <Button fx:id="stat" mnemonicParsing="false" text="Stat. Boite Mail" />
               </items>
             </ToolBar>
          </top>
          <bottom>
-            <Label fx:id="statusLabel" prefHeight="26.0" prefWidth="555.0" text="Statut : Non connecté" BorderPane.alignment="CENTER" />
+            <Label fx:id="status" prefHeight="26.0" prefWidth="555.0" text="Statut : Non connecté" BorderPane.alignment="CENTER" />
          </bottom>
       </BorderPane>
    </children>
