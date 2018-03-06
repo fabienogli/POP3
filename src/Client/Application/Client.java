@@ -148,11 +148,10 @@ public class Client {
     public String read() {
         String data = "";
         try {
-            DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            while ((fromServer.available()) != 0) {
-                data += fromServer.readLine()+"\n" ;
-                System.out.println("recu :"+data);
-            }
+            BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+            do {
+                data += fromServer.readLine() + "\n";
+            } while (fromServer.ready());
         } catch (IOException e) {
             e.printStackTrace();
         }

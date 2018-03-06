@@ -13,6 +13,7 @@ public class testClient {
             Client client = new Client();
             client.setUtilisateur(utilisateur);
             client.authentification();
+            client.list();
         } catch (IOException e) {
             e.printStackTrace();
         }
