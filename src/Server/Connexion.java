@@ -87,8 +87,20 @@ public class Connexion implements Runnable {
 
         try {
             System.out.println("Server envoie" + result);
-            outToClient.writeBytes(result + "\n");
+            //test/////////////
+            String[] resultTable=result.split("\n");
+            if(resultTable.length>0){
+                for(int i=0;i<resultTable.length;i++){
+                    outToClient.writeBytes(resultTable[i] + "\n");
+                }
+            }else{
+                outToClient.writeBytes(result + "\n");
+            }
             outToClient.flush();
+            //fin test//////////
+            /*
+            outToClient.writeBytes(result + "\n");
+            outToClient.flush();*/
             //outToClient.close();
         } catch (IOException e) {
             e.printStackTrace();

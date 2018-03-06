@@ -17,7 +17,7 @@ public class Client {
     private InetAddress adresseIp;
     private Utilisateur utilisateur;
     private int port;
-    private StateEnum stateEnum= null;
+    private StateEnum stateEnum = null;
 
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
@@ -38,7 +38,7 @@ public class Client {
         this(adresseIp, port);
         this.utilisateur = utilisateur;
     }
-    
+
     public Utilisateur getUtilisateur() {
         return utilisateur;
     }
@@ -63,12 +63,13 @@ public class Client {
         this.port = port;
     }
 
-    public void start() throws IOException {
+    public String start() throws IOException {
         System.out.println("Démarrage client");
         String reponseServer = read();
-        if (reponseServer.contains("Ready")) {
+        //if (reponseServer.contains("Ready")) {
             this.stateEnum = StateEnum.ATTENTE_CONNEXION;
-        }
+        //}
+        return reponseServer;
     }
 
     public boolean authentification() {
@@ -92,8 +93,8 @@ public class Client {
         return true;
     }
 
-    public void createMailFile(){
-        Path file = Paths.get("src/Client/Mails/"+this.utilisateur.getNom()) ;
+    public void createMailFile() {
+        Path file = Paths.get("src/Client/Mails/" + this.utilisateur.getNom());
         try {
             // Create the empty file with default permissions, etc.
             Files.createFile(file);
@@ -119,26 +120,29 @@ public class Client {
         System.out.println("Le client envoie " + data);
     }
 
-    public String read(){
+    public String read() {
         String data = "";
         try {
             DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            //data = fromServer.readLine();
-            //data =fromServer.;
-
+            while ((fromServer.available()) != 0) {
+                data += fromServer.readLine()+"\n" ;
+                System.out.println("recu :"+data);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         System.out.println("Le client recoit " + data);
         return data;
     }
-    public String retr(int numMessage){
-        String reponseServer ="";
+
+    public String retr(int numMessage) {
+        String reponseServer = "";
         System.out.println("dans retr");
         write("RETR " + numMessage);
         reponseServer = read();
         return reponseServer;
     }
+
     public String list() {
         String reponseServer = "";
         System.out.println("dans list");
@@ -150,7 +154,6 @@ public class Client {
     public void stat() {
         write("STAT");
     }
-
 
 
     public void del(int i_message) {
