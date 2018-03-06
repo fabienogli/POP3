@@ -155,7 +155,6 @@ public class Client {
         String data = "";
         int i = 0;
         try {
-
             //DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
             /*PushbackInputStream pbi = new PushbackInputStream(fromServer);
             while ((i=pbi.read()) != -1) {
