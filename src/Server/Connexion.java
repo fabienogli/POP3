@@ -31,9 +31,6 @@ public class Connexion implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("Dans le run");
-        DataInputStream inFromClient;
-        DataOutputStream outToClient;
         //Dans le run de serveur
         System.out.println(this.currentstate);
         boolean resultCommand = true;
@@ -41,24 +38,10 @@ public class Connexion implements Runnable {
             if (this.currentstate.equals(StateEnum.ATTENTE_CONNEXION)) {
                 String result = States.attenteConnexion(this);
                 saveTimestamp(result);
-                try {
-                    outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                    outToClient.writeBytes(result);
-                    outToClient.flush();
-                    // outToClient.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                write(result);
                 System.out.println(this.currentstate);
             } else {
-
-                try {
-                    inFromClient = new DataInputStream(clientSocket.getInputStream());
-                    outToClient = new DataOutputStream(clientSocket.getOutputStream());
-                    resultCommand = this.traiterCommande(inFromClient, outToClient);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                    resultCommand = this.traiterCommande();
 
             }
         }
@@ -68,21 +51,13 @@ public class Connexion implements Runnable {
         this.timestamp = result.split(" ")[1];
     }
 
-    private boolean traiterCommande(DataInputStream infromClient, DataOutputStream outToClient) {
+    private boolean traiterCommande() {
 
-        String requete = "";
         String result = "";
-        String codeRetour[] = null;
-        try {
-            requete = infromClient.readLine();
-            System.out.println("Server recoit" + requete);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        String requete = read();
         if (requete.contains("QUIT")) {
             try {
-                outToClient.close();
+                this.clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -104,27 +79,7 @@ public class Connexion implements Runnable {
                 break;
         }
         System.out.println(this.currentstate);
-
-        try {
-            System.out.println("Server envoie" + result);
-            //test/////////////
-            String[] resultTable=result.split("\n");
-            if(resultTable.length>0){
-                for(int i=0;i<resultTable.length;i++){
-                    outToClient.writeBytes(resultTable[i] + "\n");
-                }
-            }else{
-                outToClient.writeBytes(result + "\n");
-            }
-            outToClient.flush();
-            //fin test//////////
-            /*
-            outToClient.writeBytes(result + "\n");
-            outToClient.flush();*/
-            //outToClient.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        write(result);
         return true;
     }
 
@@ -147,5 +102,29 @@ public class Connexion implements Runnable {
 
     public String getTimestamp() {
         return timestamp;
+    }
+
+    public void write(String message) {
+        try {
+            PrintWriter outToClient = new PrintWriter(this.clientSocket.getOutputStream());
+            outToClient.write(message);
+            System.out.println("le serveur envoie" + message);
+            outToClient.println();
+            outToClient.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String read() {
+        String result = "";
+        try {
+            BufferedReader fromClient = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+            result = fromClient.readLine();
+            System.out.println("le serveur reçoit" + result);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

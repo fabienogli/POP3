@@ -75,7 +75,6 @@ public class Client {
         System.out.println("Démarrage client");
         this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
         String reponseServer = read();
-        System.out.println("Dans constructeur"+reponseServer);
         String[] str = reponseServer.split("Ready ");
         if (str.length == 2) {
             timestamp = str[1];
@@ -88,7 +87,6 @@ public class Client {
         if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
             return false;
         }
-        System.out.println("dans authentification");
         if (this.getUtilisateur() == null) {
             return false;
         }
@@ -109,7 +107,6 @@ public class Client {
         if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
             return false;
         }
-        System.out.println("dans authentification APOP");
         if (this.getUtilisateur() == null) {
             return false;
         }
@@ -154,19 +151,9 @@ public class Client {
 
     public String read() {
         StringBuilder data = new StringBuilder();
-        int i = 0;
         try {
-            //DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            /*PushbackInputStream pbi = new PushbackInputStream(fromServer);
-            while ((i=pbi.read()) != -1) {
-                pbi.unread(i);
-                data += fromServer.readLine()+"\n" ;
-                System.out.println("recu :"+data);
-            }*/
             BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
-            do {
-                data.append(fromServer.readLine()).append("\n");
-            } while (fromServer.ready() );
+            data.append(fromServer.readLine());
             //while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
         } catch (IOException e) {
             e.printStackTrace();
@@ -175,19 +162,33 @@ public class Client {
         return data.toString();
     }
 
+    public String readMultipleLines() {
+        StringBuilder data = new StringBuilder();
+        try {
+            BufferedReader fromServer = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+            String tmp = fromServer.readLine();
+            do {
+                data.append(tmp).append("\n");
+                tmp = fromServer.readLine();
+            } while (tmp.length() > 0 && tmp.charAt(0) != '.');
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Le client recoit " + data.toString());
+        return data.toString();
+    }
+
     public String retr(int numMessage) {
         String reponseServer = "";
-        System.out.println("dans retr");
         write("RETR " + numMessage);
-        reponseServer = read();
+        reponseServer = readMultipleLines();
         return reponseServer;
     }
 
     public String list() {
         String reponseServer = "";
-        System.out.println("dans list");
         write("LIST");
-        reponseServer = read();
+        reponseServer = readMultipleLines();
         return reponseServer;
     }
 

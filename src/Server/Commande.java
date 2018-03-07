@@ -62,6 +62,7 @@ public class Commande {
             result.append("(").append(connexion.getMailBox().getBytes()).append(")");
             result.append(connexion.getMailBox().buildList());
         }
+        result.append("\n.");
 
         return result.toString();
     }
