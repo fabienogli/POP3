@@ -123,6 +123,7 @@ public class Controller {
                 disableButton(false);
                 login.setText("Deconnexion");
                 connected = true;
+                client.createMailFile();
             }
             status.setText(convertStateEnumToString(client.getStatus()));
         });
@@ -209,15 +210,17 @@ public class Controller {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Status: ");
         switch (stateEnum) {
-            case ATTENTE_CONNEXION:
+            case AUTHORIZATION:
                 stringBuilder.append("Déconnecté");
                 break;
+                /*
             case AUTHORIZATION:
                 stringBuilder.append("Authentification");
                 break;
             case AUTHENTIFICATION:
                 stringBuilder.append("Authentification");
                 break;
+                */
             case TRANSACTION:
                 stringBuilder.append("Connecté");
                 break;
