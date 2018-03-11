@@ -32,7 +32,7 @@
                   <Button fx:id="list" mnemonicParsing="false" onAction="#handleListButton" text="Lister Messages" />
                   <Button fx:id="retr" mnemonicParsing="false" onAction="#handleRetrieveButton" text="Recupérer Message" />
                   <Button fx:id="dele" mnemonicParsing="false" text="Supprimer Message" />
-                  <Button fx:id="stat" mnemonicParsing="false" text="Stat. Boite Mail" />
+                  <Button fx:id="stat" mnemonicParsing="false" onAction="#handleStatButton" text="Stat. Boite Mail" />
               </items>
             </ToolBar>
          </top>

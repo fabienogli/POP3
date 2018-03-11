@@ -192,8 +192,11 @@ public class Client {
         return reponseServer;
     }
 
-    public void stat() {
+    public String stat() {
+        String reponseServer = "";
         write("STAT");
+        reponseServer = read();
+        return reponseServer;
     }
 
 
@@ -206,6 +209,8 @@ public class Client {
     }
 
     public void logout() {
+        this.stateEnum=StateEnum.AUTHORIZATION;
         write("QUIT");
+
     }
 }
