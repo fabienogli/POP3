@@ -121,7 +121,7 @@ public class Controller {
             Utilisateur utilisateur = new Utilisateur(usernamePassword.getKey());
             utilisateur.setMdp(usernamePassword.getValue());
             client.setUtilisateur(utilisateur);
-            if (client.authentification()) {
+            if (client.authentificationApop()) {
                 disableButton(false);
                 login.setText("Deconnexion");
                 connected = true;
