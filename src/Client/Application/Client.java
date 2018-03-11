@@ -78,13 +78,13 @@ public class Client {
         String[] str = reponseServer.split("Ready ");
         if (str.length == 2) {
             timestamp = str[1];
-            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
+            this.stateEnum = StateEnum.AUTHORIZATION;
         }
         return reponseServer;
     }
 
     public boolean authentification() {
-        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
+        if (!this.stateEnum.equals(StateEnum.AUTHORIZATION)) {
             return false;
         }
         if (this.getUtilisateur() == null) {
@@ -98,13 +98,13 @@ public class Client {
         write("PASS " + this.getUtilisateur().getMdp());
         reponseServer = read();
         if (reponseServer.contains("+OK")) {
-            this.stateEnum = StateEnum.AUTHORIZATION;
+            this.stateEnum = StateEnum.TRANSACTION;
         }
         return true;
     }
 
     public boolean authentificationApop() {
-        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
+        if (!this.stateEnum.equals(StateEnum.AUTHORIZATION)) {
             return false;
         }
         if (this.getUtilisateur() == null) {
@@ -114,7 +114,7 @@ public class Client {
         write("APOP " + this.getUtilisateur().getNom() + " " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
         String reponseServer = read();
         if (reponseServer.contains("+OK")) {
-            this.stateEnum = StateEnum.AUTHORIZATION;
+            this.stateEnum = StateEnum.TRANSACTION;
         }
         return true;
     }
@@ -193,8 +193,11 @@ public class Client {
         return reponseServer;
     }
 
-    public void stat() {
+    public String stat() {
+        String reponseServer = "";
         write("STAT");
+        reponseServer = read();
+        return reponseServer;
     }
 
 
@@ -207,6 +210,8 @@ public class Client {
     }
 
     public void logout() {
+        this.stateEnum=StateEnum.AUTHORIZATION;
         write("QUIT");
+
     }
 }

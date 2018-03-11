@@ -58,7 +58,9 @@ public class Controller {
         if (connected) {
             this.client.logout();
             login.setText("Connexion");
+            status.setText(convertStateEnumToString(client.getStatus()));
             connected = false;
+            disableButton(true);
             return;
         }
 
@@ -123,6 +125,7 @@ public class Controller {
                 disableButton(false);
                 login.setText("Deconnexion");
                 connected = true;
+                client.createMailFile();
             }
             status.setText(convertStateEnumToString(client.getStatus()));
         });
@@ -186,6 +189,8 @@ public class Controller {
 
     @FXML
     private void handleStatButton(ActionEvent event) {
+        String reponseServer=client.stat();
+        this.textArea.setText(reponseServer);
     }
 
     @FXML
@@ -194,30 +199,22 @@ public class Controller {
     this.textArea.setText(reponseServer);
     }
 
-    @FXML
-    public void disableList() {
-        list.setDisable(true);
-
-    }
-
-
-    public void setList(Button list) {
-        this.list = list;
-    }
 
     public static String convertStateEnumToString(StateEnum stateEnum) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Status: ");
         switch (stateEnum) {
-            case ATTENTE_CONNEXION:
+            case AUTHORIZATION:
                 stringBuilder.append("Déconnecté");
                 break;
+                /*
             case AUTHORIZATION:
                 stringBuilder.append("Authentification");
                 break;
             case AUTHENTIFICATION:
                 stringBuilder.append("Authentification");
                 break;
+                */
             case TRANSACTION:
                 stringBuilder.append("Connecté");
                 break;
@@ -236,6 +233,7 @@ public class Controller {
     }
 
     public void close() {
+        connected=false;
         this.client.logout();
     }
 }

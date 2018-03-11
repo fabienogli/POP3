@@ -369,7 +369,7 @@ public class Commande {
     }
     private static String generateDateStamp(){
         StringBuilder dateStamp = new StringBuilder();
-        String stamp ="";
+        String stamp ="" ;
         Date date = new Date();
         String uniqueID = UUID.randomUUID().toString();
         dateStamp.append(uniqueID).append(date);
@@ -381,7 +381,7 @@ public class Commande {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return "<"+stamp+">";
+        return "<"+stamp+"@pop.markFabienFlo.fr"+">";
 
     }
 
