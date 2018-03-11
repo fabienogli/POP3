@@ -9,10 +9,7 @@ public class States {
         switch (arg[0]) {
             //commandes prises en charge par cet etat
             case "APOP":
-                returnCode = "-ERR APOP invalide";
-                if (Commande.isApopValid(requete, connexion)) {
-                    returnCode = "+OK authentification APOP réussie";
-                }
+                returnCode = Commande.apop(requete, connexion);
                 break;
             case "USER":
                 System.out.println("envoi user");

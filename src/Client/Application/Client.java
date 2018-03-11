@@ -110,7 +110,8 @@ public class Client {
         if (this.getUtilisateur() == null) {
             return false;
         }
-        write("APOP " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
+        System.out.println(timestamp + this.getUtilisateur().getMdp());
+        write("APOP " + this.getUtilisateur().getNom() + " " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
         String reponseServer = read();
         if (reponseServer.contains("+OK")) {
             this.stateEnum = StateEnum.AUTHORIZATION;

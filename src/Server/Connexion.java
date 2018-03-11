@@ -48,7 +48,9 @@ public class Connexion implements Runnable {
     }
 
     private void saveTimestamp(String result) {
-        this.timestamp = result.split(" ")[1];
+        String[] tmp = result.split("\n")[0].split(" ");
+        timestamp = tmp[tmp.length -1];
+        System.out.println("timestamp sauvegardé: "+ timestamp);
     }
 
     private boolean traiterCommande() {
@@ -121,7 +123,7 @@ public class Connexion implements Runnable {
         try {
             BufferedReader fromClient = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
             result = fromClient.readLine();
-            System.out.println("le serveur reçoit" + result);
+            System.out.println("le serveur reçoit " + result);
         } catch (IOException e) {
             e.printStackTrace();
         }
