@@ -126,6 +126,7 @@ public class Controller {
                 login.setText("Deconnexion");
                 connected = true;
                 client.createMailFile();
+                textArea.setText("Bienvenue "+ usernamePassword.getKey() + "!");
             }
             status.setText(convertStateEnumToString(client.getStatus()));
         });

@@ -4,6 +4,8 @@ import Server.Commande;
 import Server.StateEnum;
 import Server.Utilisateur;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -19,10 +21,13 @@ import java.util.Set;
 
 public class Client {
 
-    private Socket clientSocket;
+    //private Socket clientSocket;
+    private int port;
     private InetAddress adresseIp;
     private Utilisateur utilisateur;
-    private int port;
+
+    private SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+    private SSLSocket clientSocket ;
 
     private StateEnum stateEnum= null;
     private String timestamp;
@@ -73,7 +78,9 @@ public class Client {
 
     public String start() throws IOException {
         System.out.println("Démarrage client");
-        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        //this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        this.clientSocket = (SSLSocket)sslsocketfactory.createSocket(this.getAdresseIp(), this.getPort());
+        this.clientSocket.setEnabledCipherSuites(new String[] { "TLS_DH_anon_WITH_AES_128_CBC_SHA" });
         String reponseServer = read();
         String[] str = reponseServer.split("Ready ");
         if (str.length == 2) {
