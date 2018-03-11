@@ -45,12 +45,16 @@ public class Controller {
     Label status;
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
         connected = false;
         disableButton(true);
-        client=new Client();
-        String s =client.start();
-        textArea.setText(s);
+        try {
+            client = new Client();
+            String s = client.start();
+            textArea.setText(s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -59,8 +63,7 @@ public class Controller {
             this.client.logout();
             login.setText("Connexion");
             status.setText(convertStateEnumToString(client.getStatus()));
-            connected = false;
-            disableButton(true);
+            initialize();
             return;
         }
 

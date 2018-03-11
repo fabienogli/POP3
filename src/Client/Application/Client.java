@@ -122,8 +122,9 @@ public class Client {
         String reponseServer = read();
         if (reponseServer.contains("+OK")) {
             this.stateEnum = StateEnum.TRANSACTION;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void createMailFile(){
