@@ -90,17 +90,17 @@ public class Message {
             StringBuilder generateMessage = new StringBuilder();
             generateMessage.append("From: ")
                     .append(this.getAuteur().toString())
-                    .append("\nTo: ")
+                    .append("\r\nTo: ")
                     .append(this.getDestinataire().toString())
-                    .append("\nSubject: ")
+                    .append("\r\nSubject: ")
                     .append(this.getSujet())
-                    .append("\nDate : ")
+                    .append("\r\nDate : ")
                     .append(this.getDate().toString())
-                    .append("\nMessage-ID <")
+                    .append("\r\nMessage-ID <")
                     .append(this.getId())
-                    .append("@local.machine.example>\n")
+                    .append("@local.machine.example>\r\n")
                     .append(this.getCorps())
-                    .append("\n.");
+                    .append("\r\n.");
 
             return generateMessage.toString();
     }

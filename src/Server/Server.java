@@ -37,7 +37,6 @@ public class Server {
                 clientSocket.setUseClientMode(false);
                 clientSocket.setEnabledProtocols(clientSocket.getSupportedProtocols());
                 clientSocket.setEnabledCipherSuites(clientSocket.getSupportedCipherSuites());
-
                 ///
                 DatagramPacket receivePacket = new DatagramPacket(buffer, buffer.length);
                 int portClient = receivePacket.getPort();

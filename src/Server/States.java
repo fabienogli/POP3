@@ -1,5 +1,7 @@
 package Server;
 
+import java.io.IOException;
+
 public class States {
 
     public static String authorization(String requete, Connexion connexion) {
@@ -18,7 +20,11 @@ public class States {
                 } else returnCode = "-ERR mauvais nombre arguments";
                 break;
             case "QUIT":
-                returnCode = Commande.quit(connexion);
+                try {
+                    returnCode = Commande.quit(connexion);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 //commandes non prises en charge cet etat
                 break;
             default:
@@ -65,7 +71,11 @@ public class States {
                 break;
             case "QUIT":
                 if (arg.length == 1) {
-                    returnCode = Commande.quit(connexion);
+                    try {
+                        returnCode = Commande.quit(connexion);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 } else returnCode = "-ERR nombre arguments invalide";
                 //commandes non prises en charge cet etat
                 break;

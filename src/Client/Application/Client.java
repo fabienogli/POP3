@@ -186,10 +186,11 @@ public class Client {
         return data.toString();
     }
 
-    public String retr(int numMessage) {
+    public String retr(int numMessage) throws IOException {
         String reponseServer = "";
         write("RETR " + numMessage);
         reponseServer = readMultipleLines();
+        writeMailToFile(reponseServer);
         return reponseServer;
     }
 
@@ -208,17 +209,32 @@ public class Client {
     }
 
 
-    public void del(int i_message) {
+    public String dele(int i_message) {
+        String reponseServer = "";
         write("DELE" + i_message);
+        reponseServer = read();
+        return reponseServer;
     }
 
     public StateEnum getStatus() {
         return this.stateEnum;
     }
 
-    public void logout() {
+    public String logout() {
+        String reponseServer = "";
         this.stateEnum=StateEnum.AUTHORIZATION;
         write("QUIT");
+        reponseServer = read();
+        return reponseServer;
 
+    }
+    private void writeMailToFile(String str)
+            throws IOException {
+        String fileName="src/Client/Mails/"+this.utilisateur.getNom();
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true));
+        writer.append(' ');
+        writer.append(str);
+
+        writer.close();
     }
 }

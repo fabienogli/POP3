@@ -34,7 +34,7 @@ public class Controller {
     @FXML
     Button list;
     @FXML
-    Button retr ;
+    Button retr;
     @FXML
     Button dele;
     @FXML
@@ -48,15 +48,15 @@ public class Controller {
     private void initialize() throws IOException {
         connected = false;
         disableButton(true);
-        client=new Client();
-        String s =client.start();
+        client = new Client();
+        String s = client.start();
         textArea.setText(s);
     }
 
     @FXML
     private void handleLoginButton(ActionEvent evt) {
         if (connected) {
-            this.client.logout();
+            textArea.setText(this.client.logout());
             login.setText("Connexion");
             status.setText(convertStateEnumToString(client.getStatus()));
             connected = false;
@@ -98,7 +98,7 @@ public class Controller {
         });
 
         password.textProperty().addListener((observable, oldValue, newValue) -> {
-            loginButton.setDisable( username.getLength() == 0 || password.getLength() == 0);
+            loginButton.setDisable(username.getLength() == 0 || password.getLength() == 0);
         });
 
         dialog.getDialogPane().setContent(grid);
@@ -126,7 +126,7 @@ public class Controller {
                 login.setText("Deconnexion");
                 connected = true;
                 client.createMailFile();
-                textArea.setText("Bienvenue "+ usernamePassword.getKey() + "!");
+                textArea.setText("Bienvenue " + usernamePassword.getKey() + "!");
             }
             status.setText(convertStateEnumToString(client.getStatus()));
         });
@@ -136,8 +136,7 @@ public class Controller {
     @FXML
     private void handleRetrieveButton(ActionEvent event) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Connexion");
-        dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
+        dialog.setTitle("Récupérer un message :");
         // Set the button types.
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
@@ -177,7 +176,12 @@ public class Controller {
 
         result.ifPresent(numMessageTmp -> {
             System.out.println(result.get());
-            String reponseServer= client.retr(Integer.parseInt(result.get()));
+            String reponseServer = null;
+            try {
+                reponseServer = client.retr(Integer.parseInt(result.get()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             System.out.println(reponseServer);
             this.textArea.setText(reponseServer);
         });
@@ -186,18 +190,64 @@ public class Controller {
 
     @FXML
     private void handleDeleteButton(ActionEvent event) {
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Supprimer un message :");
+        // Set the button types.
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+        // Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField numMessage = new TextField();
+        numMessage.setPromptText("");
+
+        grid.add(new Label("Numéro du message:"), 0, 0);
+        grid.add(numMessage, 1, 0);
+
+        Node okButton = dialog.getDialogPane().lookupButton(okButtonType);
+        okButton.setDisable(true);
+        // Do some validation (using the Java 8 lambda syntax).
+        numMessage.textProperty().addListener((observable, oldValue, newValue) -> {
+            okButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+// Request focus on the username field by default.
+        Platform.runLater(() -> numMessage.requestFocus());
+
+// Convert the result to a username-password-pair when the login button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                return numMessage.getText();
+            }
+            return null;
+        });
+
+        Optional<String> result = dialog.showAndWait();
+
+        result.ifPresent(numMessageTmp -> {
+            System.out.println(result.get());
+            String reponseServer = "";
+            reponseServer = client.dele(Integer.parseInt(result.get()));
+            System.out.println(reponseServer);
+            this.textArea.setText(reponseServer);
+        });
     }
 
     @FXML
     private void handleStatButton(ActionEvent event) {
-        String reponseServer=client.stat();
+        String reponseServer = client.stat();
         this.textArea.setText(reponseServer);
     }
 
     @FXML
     private void handleListButton() {
-    String reponseServer=client.list();
-    this.textArea.setText(reponseServer);
+        String reponseServer = client.list();
+        this.textArea.setText(reponseServer);
     }
 
 
@@ -234,7 +284,7 @@ public class Controller {
     }
 
     public void close() {
-        connected=false;
+        connected = false;
         this.client.logout();
     }
 }

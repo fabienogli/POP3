@@ -59,6 +59,7 @@ public class Connexion implements Runnable {
         String requete = read();
         if (requete.contains("QUIT")) {
             try {
+                write(Commande.quit(this));
                 this.clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();

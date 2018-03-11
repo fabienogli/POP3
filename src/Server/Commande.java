@@ -15,8 +15,9 @@ public class Commande {
     private static String cheminDatabase = "src/database/";
     private static String timestamp;
 
-    public static String quit(Connexion connexion) {
+    public static String quit(Connexion connexion) throws IOException {
         String result = "+OK Serveur POP3 de Mark-Florian-Fabien signing off";
+        //deleteMarkedMails(connexion);
         connexion.setCurrentstate(StateEnum.ATTENTE_CONNEXION);
         //gerer le cas ou des messages ont ete marque a efface
         return result;
@@ -109,7 +110,7 @@ public class Commande {
         return statSb.toString();
     }
 
-    public static String delete(Connexion connexion,int numMsg) {
+    public static String delete(Connexion connexion, int numMsg) {
         StringBuilder sb = new StringBuilder();
         if (((numMsg - 1) < 0) || ((numMsg - 1) > connexion.getMailBox().getNumberMessages())) {
             sb.append("-ERR numero de message invalide");
@@ -117,6 +118,7 @@ public class Commande {
             sb.append("-ERR message ").append(numMsg).append(" deja marque supprime");
         } else {
             sb.append("+OK ").append("message ").append(numMsg).append("supprime");
+            connexion.getMailBox().getMessage(numMsg - 1).setDeleteMark(true);
         }
 
         return sb.toString();
@@ -143,7 +145,7 @@ public class Commande {
 
     public static String ready() {
         //envoi message ready
-        return "Serveur POP3 de Mark-Fabien-Florian Ready "+ generateDateStamp() + "\n";
+        return "Serveur POP3 de Mark-Fabien-Florian Ready " + generateDateStamp() + "\n";
     }
 
     public static String encryptApop(String toEncrypt) {
@@ -367,22 +369,41 @@ public class Commande {
         }
 
     }
-    private static String generateDateStamp(){
+
+    private static String generateDateStamp() {
         StringBuilder dateStamp = new StringBuilder();
-        String stamp ="" ;
+        String stamp = "";
         Date date = new Date();
         String uniqueID = UUID.randomUUID().toString();
         dateStamp.append(uniqueID).append(date);
         MessageDigest m;
         try {
-            m= MessageDigest.getInstance("MD5");
-            m.update(dateStamp.toString().getBytes(),0,dateStamp.toString().length());
-            stamp= new BigInteger(1,m.digest()).toString();
+            m = MessageDigest.getInstance("MD5");
+            m.update(dateStamp.toString().getBytes(), 0, dateStamp.toString().length());
+            stamp = new BigInteger(1, m.digest()).toString();
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return "<"+stamp+"@pop.markFabienFlo.fr"+">";
+        return "<" + stamp + "@pop.markFabienFlo.fr" + ">";
 
     }
+
+    private static void deleteMarkedMails(Connexion connexion) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(cheminDatabase + connexion.getUSER()+ "_messages"));
+        try {
+            for (Message m : connexion.getMailBox().getMessages()
+                    ) {
+                if (!m.isDeleteMark()) {
+                    writer.write(m.toString());
+                }
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 
 }
