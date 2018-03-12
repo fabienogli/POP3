@@ -127,12 +127,12 @@ public class Commande {
         if (num <= 0 || num > connexion.getMailBox().getNumberMessages()) {
             System.out.println(connexion.getMailBox().getNumberMessages());
             System.out.print("RETR echec mauvais numero de message");
-            return "-ERR no such messages,only " + connexion.getMailBox().getNumberMessages() + " messages in maildrop";
+            return "-ERR no such messages,only " + connexion.getMailBox().getNumberMessages() + " messages in maildrop"+"\n.";
         } else {
             Message mail = connexion.getMailBox().getMessage(num - 1);
             if (mail.isDeleteMark()) {
                 System.out.print("RETR echec mail supprime");
-                return "-ERR message " + num + " is deleted";
+                return "-ERR message " + num + " is deleted"+"\n.";
             }
             System.out.print("RETR succes");
             mailSb.append("+OK " + mail.size() + " octets").append("\n").append(mail.toString());
