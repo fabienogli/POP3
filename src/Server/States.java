@@ -54,7 +54,7 @@ public class States {
                 //verifier que le message nest pas marqué a effacer
                 if (arg.length == 2) {
                     returnCode = Commande.retrieve(Integer.parseInt(arg[1]), connexion);
-                } else returnCode = "-ERR nombre arguments invalide";
+                } else returnCode = "-ERR nombre arguments invalide.";
                 break;
             case "DELE":
                 //verifier que le message nest pas marqué a effacer
