@@ -39,7 +39,6 @@ public class Connexion implements Runnable {
                 String result = States.attenteConnexion(this);
                 saveTimestamp(result);
                 write(result);
-                System.out.println(this.currentstate);
             } else {
                     resultCommand = this.traiterCommande();
 
