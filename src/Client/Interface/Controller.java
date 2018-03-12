@@ -45,12 +45,16 @@ public class Controller {
     Label status;
 
     @FXML
-    private void initialize() throws IOException {
+    private void initialize() {
         connected = false;
         disableButton(true);
-        client=new Client();
-        String s =client.start();
-        textArea.setText(s);
+        try {
+            client = new Client();
+            String s = client.start();
+            textArea.setText(s);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -58,7 +62,8 @@ public class Controller {
         if (connected) {
             this.client.logout();
             login.setText("Connexion");
-            connected = false;
+            status.setText(convertStateEnumToString(client.getStatus()));
+            initialize();
             return;
         }
 
@@ -119,10 +124,12 @@ public class Controller {
             Utilisateur utilisateur = new Utilisateur(usernamePassword.getKey());
             utilisateur.setMdp(usernamePassword.getValue());
             client.setUtilisateur(utilisateur);
-            if (client.authentification()) {
+            if (client.authentificationApop()) {
                 disableButton(false);
                 login.setText("Deconnexion");
                 connected = true;
+                client.createMailFile();
+                textArea.setText("Bienvenue "+ usernamePassword.getKey() + "!");
             }
             status.setText(convertStateEnumToString(client.getStatus()));
         });
@@ -174,6 +181,7 @@ public class Controller {
         result.ifPresent(numMessageTmp -> {
             System.out.println(result.get());
             String reponseServer= client.retr(Integer.parseInt(result.get()));
+            System.out.println(reponseServer);
             this.textArea.setText(reponseServer);
         });
 
@@ -185,6 +193,8 @@ public class Controller {
 
     @FXML
     private void handleStatButton(ActionEvent event) {
+        String reponseServer=client.stat();
+        this.textArea.setText(reponseServer);
     }
 
     @FXML
@@ -193,30 +203,22 @@ public class Controller {
     this.textArea.setText(reponseServer);
     }
 
-    @FXML
-    public void disableList() {
-        list.setDisable(true);
-
-    }
-
-
-    public void setList(Button list) {
-        this.list = list;
-    }
 
     public static String convertStateEnumToString(StateEnum stateEnum) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Status : ");
+        stringBuilder.append("Status: ");
         switch (stateEnum) {
-            case ATTENTE_CONNEXION:
+            case AUTHORIZATION:
                 stringBuilder.append("Déconnecté");
                 break;
+                /*
             case AUTHORIZATION:
-                stringBuilder.append("Connecté");
+                stringBuilder.append("Authentification");
                 break;
             case AUTHENTIFICATION:
                 stringBuilder.append("Authentification");
                 break;
+                */
             case TRANSACTION:
                 stringBuilder.append("Connecté");
                 break;
@@ -235,6 +237,7 @@ public class Controller {
     }
 
     public void close() {
+        connected=false;
         this.client.logout();
     }
 }

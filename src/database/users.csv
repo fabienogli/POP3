@@ -1,4 +1,4 @@
-USER,PASS,KEY,MAIL
-foo,bar,strength,foobar@mail.com
-root,toor,will,root@mail.com
-john,doe,begood,john@mail.com
+USER,PASS,MAIL
+foo,bar,foobar@mail.com
+root,toor,root@mail.com
+john,doe,john@mail.com

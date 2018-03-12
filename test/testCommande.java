@@ -74,6 +74,10 @@ public class testCommande extends Commande {
         System.out.println("c4c9334bac560ecc979e58001b3e22fb".equals(Commande.encryptApop("<1896.697170952@dbc.mtview.ca.us>tanstaaf")));
     }
 
+    private static void isApopValide() {
+
+    }
+
     protected static void testAddMail() {
         addMail("john");
     }
@@ -81,7 +85,7 @@ public class testCommande extends Commande {
     public static void main(String[] args) {
 //        testPass();
 //        testUser();
-//        testEncyptApop();
-        testAddMail();
+        testEncyptApop();
+//        testAddMail();
     }
 }

@@ -11,9 +11,11 @@ public class testClient {
         utilisateur.setMdp("doe");
         try {
             Client client = new Client();
+            client.start();
             client.setUtilisateur(utilisateur);
-            client.authentification();
+            client.authentificationApop();
             client.list();
+            client.retr(1);
             client.logout();
         } catch (IOException e) {
             e.printStackTrace();

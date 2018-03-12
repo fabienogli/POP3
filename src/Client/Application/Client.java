@@ -4,6 +4,8 @@ import Server.Commande;
 import Server.StateEnum;
 import Server.Utilisateur;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -19,10 +21,13 @@ import java.util.Set;
 
 public class Client {
 
-    private Socket clientSocket;
+    //private Socket clientSocket;
+    private int port;
     private InetAddress adresseIp;
     private Utilisateur utilisateur;
-    private int port;
+
+    private SSLSocketFactory sslsocketfactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+    private SSLSocket clientSocket ;
 
     private StateEnum stateEnum= null;
     private String timestamp;
@@ -30,14 +35,7 @@ public class Client {
     public Client(InetAddress adresseIp, int port) throws IOException {
         this.adresseIp = adresseIp;
         this.port = port;
-        this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
-        String reponseServer = read();
-        System.out.println("Dans constructeur"+reponseServer);
-        String[] str = reponseServer.split("Ready ");
-        if (str.length == 2) {
-            timestamp = str[1];
-            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
-        }
+
     }
 
     public Client() throws IOException {
@@ -80,18 +78,22 @@ public class Client {
 
     public String start() throws IOException {
         System.out.println("Démarrage client");
-        String reponseServer ="";//= read();
-        //if (reponseServer.contains("Ready")) {
-            this.stateEnum = StateEnum.ATTENTE_CONNEXION;
-        //}
+        //this.clientSocket = new Socket(this.getAdresseIp(), this.getPort());
+        this.clientSocket = (SSLSocket)sslsocketfactory.createSocket(this.getAdresseIp(), this.getPort());
+        this.clientSocket.setEnabledCipherSuites(new String[] { "TLS_DH_anon_WITH_AES_128_CBC_SHA" });
+        String reponseServer = read();
+        String[] str = reponseServer.split("Ready ");
+        if (str.length == 2) {
+            timestamp = str[1];
+            this.stateEnum = StateEnum.AUTHORIZATION;
+        }
         return reponseServer;
     }
 
     public boolean authentification() {
-        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
+        if (!this.stateEnum.equals(StateEnum.AUTHORIZATION)) {
             return false;
         }
-        System.out.println("dans authentification");
         if (this.getUtilisateur() == null) {
             return false;
         }
@@ -103,25 +105,26 @@ public class Client {
         write("PASS " + this.getUtilisateur().getMdp());
         reponseServer = read();
         if (reponseServer.contains("+OK")) {
-            this.stateEnum = StateEnum.AUTHORIZATION;
+            this.stateEnum = StateEnum.TRANSACTION;
         }
         return true;
     }
 
     public boolean authentificationApop() {
-        if (!this.stateEnum.equals(StateEnum.ATTENTE_CONNEXION)) {
+        if (!this.stateEnum.equals(StateEnum.AUTHORIZATION)) {
             return false;
         }
-        System.out.println("dans authentification APOP");
         if (this.getUtilisateur() == null) {
             return false;
         }
-        write("APOP " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
+        System.out.println(timestamp + this.getUtilisateur().getMdp());
+        write("APOP " + this.getUtilisateur().getNom() + " " + Commande.encryptApop(timestamp + this.getUtilisateur().getMdp()));
         String reponseServer = read();
         if (reponseServer.contains("+OK")) {
-            this.stateEnum = StateEnum.AUTHORIZATION;
+            this.stateEnum = StateEnum.TRANSACTION;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public void createMailFile(){
@@ -151,50 +154,58 @@ public class Client {
         System.out.println("Le client envoie " + data);
     }
 
-    public String read() {
+   /* public String read() {
         return read(false);
-    }
+    }*/
 
-    public String read(boolean stopOnlyWhenDot) {
-        String data = "";
-        int i = 0;
+    public String read() {
+        StringBuilder data = new StringBuilder();
         try {
-            //DataInputStream fromServer = new DataInputStream(this.clientSocket.getInputStream());
-            /*PushbackInputStream pbi = new PushbackInputStream(fromServer);
-            while ((i=pbi.read()) != -1) {
-                pbi.unread(i);
-                data += fromServer.readLine()+"\n" ;
-                System.out.println("recu :"+data);
-            }*/
             BufferedReader fromServer  = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
-            do {
-                data += fromServer.readLine() + "\n";
-            } while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
+            data.append(fromServer.readLine());
+            //while (fromServer.ready() || (stopOnlyWhenDot && data.indexOf(".") == -1));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Le client recoit " + data);
-        return data;
+        System.out.println("Le client recoit " + data.toString());
+        return data.toString();
+    }
+
+    public String readMultipleLines() {
+        StringBuilder data = new StringBuilder();
+        try {
+            BufferedReader fromServer = new BufferedReader(new InputStreamReader(this.clientSocket.getInputStream()));
+            String tmp = fromServer.readLine();
+            do {
+                data.append(tmp).append("\n");
+                tmp = fromServer.readLine();
+            } while (tmp.length() > 0 && tmp.charAt(0) != '.');
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Le client recoit " + data.toString());
+        return data.toString();
     }
 
     public String retr(int numMessage) {
         String reponseServer = "";
-        System.out.println("dans retr");
         write("RETR " + numMessage);
-        reponseServer = read();
+        reponseServer = readMultipleLines();
         return reponseServer;
     }
 
     public String list() {
         String reponseServer = "";
-        System.out.println("dans list");
         write("LIST");
-        reponseServer = read();
+        reponseServer = readMultipleLines();
         return reponseServer;
     }
 
-    public void stat() {
+    public String stat() {
+        String reponseServer = "";
         write("STAT");
+        reponseServer = read();
+        return reponseServer;
     }
 
 
@@ -207,6 +218,8 @@ public class Client {
     }
 
     public void logout() {
+        this.stateEnum=StateEnum.AUTHORIZATION;
         write("QUIT");
+
     }
 }

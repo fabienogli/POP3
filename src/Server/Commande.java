@@ -49,6 +49,26 @@ public class Commande {
         return result;
     }
 
+    public static String apop(String requete, Connexion connexion) {
+        String result = "-ERR APOP invalide";
+
+        String[] tab = requete.split(" ");
+        if (tab.length != 3) {
+            return result;
+        }
+        String USER = tab[1];
+        String APOP = tab[2];
+
+        if (Commande.isApopValid(USER, APOP, connexion)) {
+            connexion.setUSER(USER);
+            connexion.setCurrentstate(StateEnum.TRANSACTION);
+            connexion.setMailBox(addMail(connexion.getUSER()));
+            result = "+OK authentification APOP réussie";
+        }
+
+        return result;
+    }
+
     public static String list(Connexion connexion) {
         StringBuilder result = new StringBuilder();
         if (connexion.getMailBox().getNumberMessages() == 0) {
@@ -62,6 +82,7 @@ public class Commande {
             result.append("(").append(connexion.getMailBox().getBytes()).append(")");
             result.append(connexion.getMailBox().buildList());
         }
+        result.append("\n.");
 
         return result.toString();
     }
@@ -114,7 +135,7 @@ public class Commande {
                 return "-ERR message " + num + " is deleted";
             }
             System.out.print("RETR succes");
-            mailSb.append("+OK " + mail.size() + " octets").append("\r\n").append(mail.toString());
+            mailSb.append("+OK " + mail.size() + " octets").append("\n").append(mail.toString());
         }
         System.out.println(mailSb.toString());
         return mailSb.toString();
@@ -139,20 +160,25 @@ public class Commande {
         return encryptMd5.toString();
     }
 
-    public static boolean isApopValid(String APOP, Connexion connexion) {
-        String USER = connexion.getUSER();
-        if (USER == null || APOP == null) {
-            return false;
-        }
+    public static boolean isApopValid(String USER, String APOP, Connexion connexion) {
+
         try {
             FileReader fileReader = new FileReader(cheminDatabase + "users.csv");
             BufferedReader db = new BufferedReader(fileReader);
             String chaine;
             int i = 1;
             while ((chaine = db.readLine()) != null) {
+                System.out.println("dans le while");
                 if (i > 1) {
                     String[] tabChaine = chaine.split(",");
-                    for (int x = 0; x < tabChaine.length; x++) {
+                    for (int x = 0; x < tabChaine.length - 1; x++) {
+//                        System.out.println("bonne encryption " + encryptApop(connexion.getTimestamp() + tabChaine[x + 1]));
+//                        System.out.println("bonne encryption " + tabChaine[x + 1]).equals(APOP));
+                        if (x == i_USER && USER.equals(tabChaine[x])) {
+
+                            System.out.println("APOP normal " + connexion.getTimestamp().concat(tabChaine[x + 1]));
+                            System.out.println("entree ? " + connexion.getTimestamp().contains("\n"));
+                        }
                         if (x == i_USER && USER.equals(tabChaine[x]) && encryptApop(connexion.getTimestamp() + tabChaine[x + 1]).equals(APOP)) {
                             return true;
                         } else if (x == i_USER && USER.equals(tabChaine[x])) { //Le user est bien là mais le mot de passe ne correspond pas
@@ -343,7 +369,7 @@ public class Commande {
     }
     private static String generateDateStamp(){
         StringBuilder dateStamp = new StringBuilder();
-        String stamp ="";
+        String stamp ="" ;
         Date date = new Date();
         String uniqueID = UUID.randomUUID().toString();
         dateStamp.append(uniqueID).append(date);
@@ -355,7 +381,7 @@ public class Commande {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        return "<"+stamp+">";
+        return "<"+stamp+"@pop.markFabienFlo.fr"+">";
 
     }
 
