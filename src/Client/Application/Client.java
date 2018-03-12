@@ -39,7 +39,7 @@ public class Client {
     }
 
     public Client() throws IOException {
-        this(java.net.InetAddress.getByName("localhost"), 2026);
+        this(java.net.InetAddress.getByName("192.168.43.210"), 2026);
     }
 
     public Client(Utilisateur utilisateur) throws IOException {
