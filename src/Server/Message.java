@@ -96,9 +96,9 @@ public class Message {
                     .append(this.getSujet())
                     .append("\nDate : ")
                     .append(this.getDate().toString())
-                    .append("\nMessage-ID <")
+                    .append("\nMessage-ID: ")
                     .append(this.getId())
-                    .append("@local.machine.example>\n")
+                    .append("\n")
                     .append(this.getCorps())
                     .append("\n.");
 
