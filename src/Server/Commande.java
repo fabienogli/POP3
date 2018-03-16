@@ -43,7 +43,7 @@ public class Commande {
         if (isPassValid(password, connexion.getUSER())) {
             connexion.setCurrentstate(StateEnum.TRANSACTION);
             connexion.setMailBox(addMail(connexion.getUSER()));
-            result = "+OK Authentification reussie";
+            result = "+OK Authentification réussie";
         }
 
         return result;
@@ -92,7 +92,7 @@ public class Commande {
         if (((numMsg - 1) < 0) || ((numMsg - 1) > connexion.getMailBox().getNumberMessages())) {
             sb.append("-ERR numero de message invalide");
         } else if (connexion.getMailBox().getMessage(numMsg - 1).isDeleteMark()) {
-            sb.append("-ERR message marque supprime");
+            sb.append("-ERR message marque supprimé");
         } else {
             sb.append("+OK ").append(numMsg).append(" ").append(connexion.getMailBox().getMessage(numMsg - 1));
         }
