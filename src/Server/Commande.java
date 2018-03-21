@@ -263,7 +263,7 @@ public class Commande {
         List<Message> mails = new ArrayList<Message>();
         StringBuilder rawMessages = new StringBuilder();
         try {
-            FileReader fileReader = new FileReader(cheminDatabase + user + "_messages");
+            FileReader fileReader = new FileReader(cheminDatabase + user + "_received_messages");
             BufferedReader db = new BufferedReader(fileReader);
             String line;
             while ((line = db.readLine()) != null) {
