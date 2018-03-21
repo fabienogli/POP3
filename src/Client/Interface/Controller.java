@@ -140,7 +140,7 @@ public class Controller {
     private void handleRetrieveButton(ActionEvent event) {
         Dialog<String> dialog = new Dialog<>();
         dialog.setTitle("Connexion");
-        dialog.setHeaderText("Entrez nom d'utilisateur et mot de passe :");
+        dialog.setHeaderText("Entrez le numéro du message à récupérer:");
         // Set the button types.
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
